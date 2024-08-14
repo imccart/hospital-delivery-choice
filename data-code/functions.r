@@ -43,3 +43,23 @@ convert_bp <- function(df,id) {
   rownames(foo) <- nn
   foo
 }
+
+
+
+dchoice.est <- function(data, vars, mvars) {
+  
+  formula <- as.formula(paste("cbind(choice,id) ~ ", paste(vars, collapse = " + ")))
+  logit.reg <- mclogit(formula, data=data)
+  logit.coef <- logit.reg$coef
+
+  ## form predictions and WTP with prediction functions
+  pred.base <- prediction(logit.reg, type="response")
+  exp.util <- as_tibble(pred.base) %>%
+    mutate(fitted=pmin(fitted, 0.99),
+          change_pred=log(1/(1-fitted)),
+          wtp=change_pred/abs(logit.reg$coef[1]))
+  avg.me <- avg_slopes(logit.reg, variables=mvars, type="response", eps=1)
+
+  return(list("pred"=exp.util, "coef"=logit.coef, "mfx"=avg.me, "mod"=logit.reg))  
+
+}
