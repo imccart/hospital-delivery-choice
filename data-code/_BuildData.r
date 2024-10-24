@@ -16,10 +16,10 @@ source("data-code/functions.R")
 # Import data -------------------------------------------------------------
 
 ## patient/delivery data
-patient.dat <- read_dta("data/input/patient-data.dta")
+patient.dat <- read_dta("data/input/Mom_delivery_V2.dta")
 
 ## hospital data
-hosp.dat <- read_dta("data/input/hospital-data.dta")
+hosp.dat <- read_dta("data/input/Hospitallevel_V2.dta")
 
 ## census tract data
 ## 2000 census tract
