@@ -266,7 +266,7 @@ for (var in hist.list) {
 
     # Save the plot
     ggsave(
-      filename = paste0("results/figures/", mkt.path, "/", pat.var, ".png"),
+      filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
       plot = plot, width = 8, height = 6, dpi = 300
     )
   }
