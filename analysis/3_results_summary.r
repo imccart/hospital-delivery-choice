@@ -54,7 +54,7 @@ logit.final <- choice.reg %>%
        filter(choice==1) %>%
        mutate(ch_dist=pred_diff_dist1 - pred_prob,
               ch_peri=pred_perilevel_plus1 - pred_perilevel_plus0,
-              ch_teach=pred_teach_major1 - pred_teach_major0,
+              ch_teach=pred_any_teach1 - pred_any_teach0,
               ch_csection=pred_c_section_elect1 - pred_prob,
               ch_psi=pred_psi_901 - pred_prob) %>%
        mutate(across(hist.list, ~ as.numeric(.)))
@@ -163,15 +163,15 @@ for (var in hist.list) {
     # Compute dynamic bin width and bin ranges
     min_val <- min(graph.final[[pat.var]], na.rm = TRUE)
     max_val <- max(graph.final[[pat.var]], na.rm = TRUE)
-    bin_width <- (max_val - min_val) / 10  # 10 bins
+    bin_width <- (max_val - min_val) / 5  # 5 bins
     bin_breaks <- seq(min_val, max_val, by = bin_width)
 
 
     # Compute effects by bins for the current continuous variable
     graph.final <- graph.final %>%
-      mutate(jittered_var = jitter(.data[[pat.var]], factor = 1e-7)) %>%
+##      mutate(jittered_var = jitter(.data[[pat.var]], factor = 1e-7)) %>%
       mutate(bin = cut(.data[[pat.var]], 
-                 breaks = quantile(jittered_var, probs = seq(0, 1, by = 0.1), na.rm = TRUE, type=1), 
+                 breaks = bin_breaks, 
                  include.lowest = TRUE)) %>%
       filter(!is.na(bin))
 
@@ -274,7 +274,7 @@ for (var in hist.list) {
 
 
 # Loop through each variable in hist.list and pat.list (binary variables only)
-pat.list <- c("nhwhite","ins_mcaid")
+pat.list <- c("nhwhite","mcaid_unins")
 pat.labels <- c("White", "Medicaid")
 
 for (var in hist.list) {
@@ -375,6 +375,10 @@ for (var in hist.list) {
 
     # Generate the plot
     plot <- ggplot() +
+      # Light, transparent lines connecting gray dots for each market
+      geom_line(data = effects_mkt, 
+                aes(x = as.factor(.data[[pat.var]]), y = mean, group = mkt), 
+                color = "gray90", alpha = 0.5) +    
       # Gray dots for each market
       geom_point(data = effects_mkt, 
                  aes(x = as.factor(.data[[pat.var]]), y = mean, group = mkt), 

@@ -1,10 +1,10 @@
 # Form markets ------------------------------------------------------------
 
 ## consturct market (census tract) data using census tract shapefiles
-market.dat %>% left_join(tract.dat, by=c("facility_censustract"="GEOID")) %>%
+market.dat %>% left_join(tract.dat, by=c("facility_GEOID"="GEOID")) %>%
     mutate(geo_match=ifelse(is.na(GEOID10),0,1)) %>%
     filter(geo_match==1) %>%
-    select(GEOID=facility_censustract, n_patient, geometry)
+    select(GEOID=facility_GEOID, total_cases, geometry)
 
 ## identify contiguous census tracts
 tract.info <- tract.dat %>% get_contig()
@@ -18,7 +18,7 @@ bp.contig <- tract.info %>% st_set_geometry(NULL) %>%
   pivot_wider(names_from="GEOID_contig", values_from="contig", values_fill = 0)
 
 ## set parameter values
-minimum_share=0.05
+minimum_share=0.10
 minimum_number=10
 
 ## create bipartite matrix
@@ -41,8 +41,8 @@ graph.dat <- graph_from_adjacency_matrix(up.final, weighted = TRUE) %>%
   simplify(., remove.loops = TRUE)
 
 ## Run cluster_walktrap on this network
-initial.communities <- walktrap.community(graph.dat,
-                        steps = 10,
+initial.communities <- cluster_walktrap(graph.dat,
+                        steps = 20,
                         merges = TRUE,
                         modularity = TRUE,
                         membership = TRUE) 

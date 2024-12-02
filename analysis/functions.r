@@ -13,8 +13,6 @@ estimate_choice_model <- function(market, var1, var2, pfx.vars, pfx.inc, data) {
   # Filter by the market
   choice.reg.m <- data %>% filter(mkt == market)
   
-  
-  
   # Step 2: Model Specification ---------------------------------------------
   
   # Create the main effects formula using var1
@@ -189,7 +187,7 @@ bootstrap_choice_model <- function(markets, var1, var2, pfx.vars, pfx.inc, data,
                       filter(choice==1) %>%
                       mutate(ch_dist = pred_diff_dist1 - pred_prob,
                              ch_peri = pred_perilevel_plus1 - pred_perilevel_plus0,
-                             ch_teach = pred_teach_major1 - pred_teach_major0,
+                             ch_teach = pred_any_teach1 - pred_any_teach0,
                              ch_csection = pred_c_section_elect1 - pred_prob,
                              ch_psi = pred_psi_901 - pred_prob,
                              boot_rep = b) %>%

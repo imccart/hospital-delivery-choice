@@ -85,7 +85,7 @@ ggplot(data = tract.dat) +
 
 # Form markets ------------------------------------------------------------
 
-# source("data-code/1_community_detection.R")
+source("data-code/1_community_detection.R")
 walktrap.dat <- read_rds("data/output/hospital_markets.rds")
 
 # Final delivery data ------------------------------------------------------
