@@ -39,33 +39,31 @@ reg.dat <- delivery.dat %>%
     ungroup() %>%
     mutate(mkt_share=pmin(hosp_deliveries/mkt_deliveries,1)) %>%
     filter(hosp_count==1) %>%
-    select(facility_d, perilevel2, perilevel34, psi_90, teach_major, teach_minor, c_section_elect, hosp_deliveries, mkt_share, year, mkt) %>%
+    select(facility_d, perilevel2, perilevel34, teach_major, teach_minor, c_section_elect, hosp_deliveries, mkt_share, year, mkt) %>%
     mutate(ln_q=log(hosp_deliveries), teach_any=if_else(teach_major==1 | teach_minor==1, 1, 0)) %>%
     left_join(market.stats2 %>% select(mkt, city), by="mkt")
 
 
-q.all <- feols(ln_q ~ psi_90 + c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat)
-share.all <- feols(mkt_share ~  psi_90 + c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat)
+q.all <- feols(ln_q ~ c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat)
+share.all <- feols(mkt_share ~  c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat)
 
 q.models <- list("Overall" = q.all)
 share.models <- list("Overall" = share.all)
 for (m in 2:11) {
     city_name <- reg.dat %>% filter(mkt == m) %>% pull(city) %>% unique()
-    q.m <- feols(ln_q ~ psi_90 + c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat %>% filter(mkt==m))
-    share.m <- feols(mkt_share ~  psi_90 + c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat %>% filter(mkt==m))
+    q.m <- feols(ln_q ~ c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat %>% filter(mkt==m))
+    share.m <- feols(mkt_share ~  c_section_elect | facility_d + year, cluster=~facility_d, data=reg.dat %>% filter(mkt==m))
     q.models <- c(q.models, setNames(list(q.m), city_name))
     share.models <- c(share.models, setNames(list(share.m), city_name))
 }
 
 modelsummary(q.models,
-             coef_rename=c("psi_90" = "PSI 90",
-                           "c_section_elect" = "Elective C-Section Rate"),
+             coef_rename=c("c_section_elect" = "Elective C-Section Rate"),
              gof_omit='DF|F|Lik|AIC|BIC|Adj',
              output="results/tables/req_ln_q.csv")
 
 modelsummary(share.models,
-             coef_rename=c("psi_90" = "PSI 90",
-                           "c_section_elect" = "Elective C-Section Rate"),
+             coef_rename=c("c_section_elect" = "Elective C-Section Rate"),
              gof_omit='DF|F|Lik|AIC|BIC|Adj',
              output="results/tables/req_share.csv")             
 
@@ -75,14 +73,14 @@ modelsummary(share.models,
 ## Atlanta market
 datasummary_balance(~choice, data= choice.reg %>%
                              select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
-                                    psi_90, teach_major, teach_minor, any_teach, c_section_elect,
+                                    teach_major, teach_minor, any_teach, c_section_elect,
                                     ci_score, ci_scorent),
                              fmt=fmt_decimal(digits=4),
                              output="results/tables/choice_stats.csv")
 
 datasummary_skim(data= choice.reg %>%
                              select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
-                                    psi_90, teach_major, teach_minor, any_teach, c_section_elect,
+                                    teach_major, teach_minor, any_teach, c_section_elect,
                                     ci_score, ci_scorent),
                             fmt=fmt_decimal(digits=4),
                             output="results/tables/choice_stats_detail.csv")

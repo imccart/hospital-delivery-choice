@@ -189,7 +189,6 @@ bootstrap_choice_model <- function(markets, var1, var2, pfx.vars, pfx.inc, data,
                              ch_peri = pred_perilevel_plus1 - pred_perilevel_plus0,
                              ch_teach = pred_any_teach1 - pred_any_teach0,
                              ch_csection = pred_c_section_elect1 - pred_prob,
-                             ch_psi = pred_psi_901 - pred_prob,
                              boot_rep = b) %>%
                       select(id, patid, facility, year, mkt, date_delivery, boot_rep, starts_with("ch_"))
       

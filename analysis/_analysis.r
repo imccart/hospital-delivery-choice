@@ -2,7 +2,7 @@
 ## Title:         Estimate Georgia Delivery Choice
 ## Author:        Ian McCarthy
 ## Date Created:  10/12/2020 (from prior repo)
-## Date Edited:   10/17/2024
+## Date Edited:   12/20/2024
 
 
 # Preliminaries -----------------------------------------------------------
@@ -88,10 +88,10 @@ n_boot=100
 mkt.path="all"
 markets <- c(2,3,4,5,6,7,8,9,10,11)
 ##markets <- c(2,3,4,5,6,7,8,10,11)
-var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect", "psi_90")
-var2 <- c("ci_scorent","age","nhwhite","mcaid_unins","obgyn_10kwra")
-pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect", "psi_90")
-pfx.inc <- c(1,1,1,0.01,0.1)
+var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
+var2 <- c("ci_scorent","age","nhwhite","nhblack","mcaid_unins","obgyn_10kwra")
+pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect")
+pfx.inc <- c(1,1,1,0.01)
 
 source("analysis/2_estimation.R")
 

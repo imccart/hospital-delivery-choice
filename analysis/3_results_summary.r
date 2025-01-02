@@ -42,7 +42,7 @@ summary.table <- reduce(processed.summaries, full_join, by = c("term", "stat"))
 # Partial Effects -------------------------------------------------------
 
 final.predictions <- bind_rows(all.predictions)
-hist.list <- c("ch_dist", "ch_peri", "ch_teach", "ch_csection", "ch_psi")
+hist.list <- c("ch_dist", "ch_peri", "ch_teach", "ch_csection")
 boot.list <- unlist(
   lapply(hist.list, function(var) {
     paste0(var, "_", 1:n_boot)
@@ -55,8 +55,7 @@ logit.final <- choice.reg %>%
        mutate(ch_dist=pred_diff_dist1 - pred_prob,
               ch_peri=pred_perilevel_plus1 - pred_perilevel_plus0,
               ch_teach=pred_any_teach1 - pred_any_teach0,
-              ch_csection=pred_c_section_elect1 - pred_prob,
-              ch_psi=pred_psi_901 - pred_prob) %>%
+              ch_csection=pred_c_section_elect1 - pred_prob) %>%
        mutate(across(hist.list, ~ as.numeric(.)))
        
 ## histograms of partial effects
@@ -142,8 +141,8 @@ pfx.data <- pfx.long %>%
 # Partial Effects by Patient Characteristics ----------------------------
 
 # Loop through each variable in hist.list and pat.list (continuous variables only)
-pat.list <- c("age", "ci_scorent", "obgyn_10kwra")
-pat.labels <- c("Age", "CI Score", "OB/GYN per 10,000")
+pat.list <- c("age")
+pat.labels <- c("Age")
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
@@ -169,7 +168,6 @@ for (var in hist.list) {
 
     # Compute effects by bins for the current continuous variable
     graph.final <- graph.final %>%
-##      mutate(jittered_var = jitter(.data[[pat.var]], factor = 1e-7)) %>%
       mutate(bin = cut(.data[[pat.var]], 
                  breaks = bin_breaks, 
                  include.lowest = TRUE)) %>%
@@ -272,6 +270,137 @@ for (var in hist.list) {
   }
 }
 
+# Loop through each variable in hist.list and pat.list (quantiles)
+pat.list <- c("ci_scorent", "obgyn_10kwra")
+pat.labels <- c("CI Score", "OB/GYN per 10,000")
+
+for (var in hist.list) {
+  for (i in seq_along(pat.list)) {
+  
+    boot.vars <- unlist(
+      lapply(var, function(v) {
+        paste0(v, "_", 1:n_boot)
+      })
+    )
+
+    pat.var <- pat.list[i]
+    pat.label <- pat.labels[i]
+
+  graph.final <- logit.final %>%
+    filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1) %>%
+    group_by(mkt) %>%
+    mutate(
+      bin = case_when(
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.2, na.rm = TRUE) ~ "20",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.4, na.rm = TRUE) ~ "40",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.6, na.rm = TRUE) ~ "60",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.8, na.rm = TRUE) ~ "80",
+        TRUE ~ "100"
+      )
+    ) %>%
+    ungroup() %>%
+    filter(!is.na(bin)) %>%
+    mutate(bin = factor(bin, levels = c("20", "40", "60", "80", "100")))
+
+    # Compute effects by bins for the current continuous variable
+    effects <- graph.final %>%
+      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+      group_by(bin) %>%
+      summarize(
+        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)) %>%
+      ungroup()
+
+    boot.wide <- graph.final %>%
+      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+      left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
+      group_by(bin) %>%
+      summarize(
+        across(
+          all_of(boot.vars),
+          list(
+            boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
+          ),
+          .names = "{.col}_mean"
+        ))
+
+    boot.long <- boot.wide %>%
+      pivot_longer(
+        cols = matches("_[0-9]+_mean$"),
+        names_to = c(".value", "bootstrap"),
+        names_pattern = "(.*)_([0-9]+)_mean$"
+      )
+
+    boot.se <- boot.long %>%
+      group_by(bin) %>%
+      summarize(sd = sd(.data[[var]], na.rm = TRUE))
+      
+    effects <- effects %>% 
+      left_join(boot.se, by="bin") %>%
+      mutate(l_95=mean-1.96*sd,
+             u_95=mean+1.96*sd)
+  
+    # Compute market-level effects by bin
+    effects_mkt <- graph.final %>%
+      group_by(bin, mkt) %>%
+      summarize(
+        mean = mean(.data[[var]], na.rm = TRUE)
+      ) %>%
+      ungroup()
+
+    boot_mkt.wide <- graph.final %>%
+      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+      group_by(bin, mkt) %>%
+      summarize(
+        across(
+          all_of(boot.vars),
+          list(
+            boot_mean = ~ mean(.x, na.rm = TRUE)
+          ),
+          .names = "{.col}_mean"
+        ))
+
+    boot_mkt.long <- boot_mkt.wide %>%
+      pivot_longer(
+        cols = matches("_[0-9]+_mean$"),
+        names_to = c(".value", "bootstrap"),
+        names_pattern = "(.*)_([0-9]+)_mean$"
+      )
+
+    boot_mkt.se <- boot_mkt.long %>%
+      group_by(bin, mkt) %>%
+      summarize(sd = sd(.data[[var]], na.rm = TRUE))      
+
+    effects_mkt <- effects_mkt %>%
+      left_join(boot_mkt.se, by=c("bin","mkt")) %>%
+      mutate(l_95=mean-1.96*sd,
+             u_95=mean+1.96*sd)
+
+    # Calculate y-axis limits
+    y_max <- max(effects_mkt$u_95, na.rm = TRUE)
+    y_min <- min(effects_mkt$l_95, na.rm = TRUE)
+
+
+    # Generate the plot
+    plot <- ggplot() +
+      geom_line(data = effects_mkt, aes(x = bin, y = mean, group = mkt), 
+                color = "gray80", linewidth = 0.6) +
+      geom_line(data = effects, aes(x = bin, y = mean, group = 1), color = "black") +
+      geom_errorbar(data = effects, aes(x = bin, ymin = l_95, ymax = u_95), 
+                    width = 0.2, color = "gray40") +
+      geom_point(data = effects, aes(x = bin, y = mean), size = 2, color = "black") +
+      labs(x = paste0("Bin of ", pat.label), y = "Mean Change in Predicted Probability") +
+      coord_cartesian(ylim = c(y_min, y_max)) +
+      theme_bw()
+
+    # Save the plot
+    ggsave(
+      filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
+      plot = plot, width = 8, height = 6, dpi = 300
+    )
+  }
+}
+
+
 
 # Loop through each variable in hist.list and pat.list (binary variables only)
 pat.list <- c("nhwhite","mcaid_unins")
@@ -293,13 +422,24 @@ for (var in hist.list) {
       filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1)
   
     # Compute overall weighted effects by binary variable
-    effects <- graph.final %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-      group_by(.data[[pat.var]]) %>%
-      summarize(
-        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)
-      ) %>%
-      ungroup()
+    if (pat.var=="nhwhite") {
+      effects <- graph.final %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+        filter(nhwhite==1 | nhblack==1) %>%
+        group_by(.data[[pat.var]]) %>%
+        summarize(
+          mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)
+        ) %>%
+        ungroup()
+    } else {
+      effects <- graph.final %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+        group_by(.data[[pat.var]]) %>%
+        summarize(
+          mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)
+        ) %>%
+        ungroup()
+    }
 
     boot.wide <- graph.final %>%
       left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
