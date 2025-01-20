@@ -85,9 +85,10 @@ write.csv(market.stats2, "results/tables/market_stats.csv", row.names=FALSE)
 
 ## Parameters for estimation
 n_boot=100
-mkt.path="all"
-markets <- c(2,3,4,5,6,7,8,9,10,11)
+mkt.path="atl-only"
+##markets <- c(2,3,4,5,6,7,8,9,10,11)
 ##markets <- c(2,3,4,5,6,7,8,10,11)
+markets <- c(9)
 var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
 var2 <- c("ci_scorent","age","nhwhite","nhblack","mcaid_unins","obgyn_10kwra")
 pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect")
