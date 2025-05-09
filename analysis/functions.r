@@ -131,11 +131,15 @@ estimate_choice_model <- function(market, var1, var2, pfx.vars, pfx.inc, data) {
     
     # Compute the modified predicted probabilities
     choice.dat.pred <- choice.dat.pred %>%
-      mutate(num_mod0 = exp(linear_pred_mod0),
-             num_mod1 = exp(linear_pred_mod1)) %>%
-      mutate(!!paste0("pred_", var,"0") := num_mod0 / denom,
-             !!paste0("pred_", var,"1") := num_mod1 / denom) %>%
-      select(-c(num_mod0, num_mod1, linear_pred_mod0, linear_pred_mod1))  # Remove temporary columns
+      mutate(num_mod0 = if_else(choice==1, exp(linear_pred_mod0), exp(linear_pred)),
+             num_mod1 = if_else(choice==1, exp(linear_pred_mod1), exp(linear_pred))) %>%
+      group_by(id) %>%
+      mutate(denom0=sum(num_mod0, na.rm = TRUE),
+             denom1=sum(num_mod1, na.rm = TRUE)) %>%
+      ungroup() %>%
+      mutate(!!paste0("pred_", var,"0") := num_mod0 / denom0,
+             !!paste0("pred_", var,"1") := num_mod1 / denom1) %>%
+      select(-c(num_mod0, num_mod1, linear_pred_mod0, linear_pred_mod1, denom0, denom1))  # Remove temporary columns
   }
   
   

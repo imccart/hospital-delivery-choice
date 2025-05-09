@@ -84,8 +84,9 @@ write.csv(market.stats2, "results/tables/market_stats.csv", row.names=FALSE)
 # Estimate Choice Model ------------------------------------------------
 
 ## Parameters for estimation
-n_boot=100
+n_boot=500
 mkt.path="atl-only"
+##mkt.path="excluding-atl"
 ##markets <- c(2,3,4,5,6,7,8,9,10,11)
 ##markets <- c(2,3,4,5,6,7,8,10,11)
 markets <- c(9)
@@ -97,6 +98,7 @@ pfx.inc <- c(1,1,1,0.01)
 source("analysis/2_estimation.R")
 
 # Summarize Results ----------------------------------------------------
+
 source("analysis/3_results_summary.R")
 write.csv(summary.table, paste0("results/tables/",mkt.path,"/coefficients.csv"), row.names=FALSE)
 write.csv(pfx.data, paste0("results/tables/",mkt.path,"/partial_effects.csv"), row.names=FALSE)
