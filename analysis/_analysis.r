@@ -8,7 +8,7 @@
 # Preliminaries -----------------------------------------------------------
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, data.table, ggplot2, haven, janitor, mclogit, broom, modelr, fixest,
-                modelsummary, prediction, effects, marginaleffects, purrr, kableExtra, scales, estimatr)
+                modelsummary, prediction, effects, marginaleffects, purrr, kableExtra, scales, estimatr, flextable, officer)
 
 ## call functions
 source("data-code/functions.R")
@@ -71,7 +71,8 @@ choice.reg <- choice.dat %>% mutate(year=as.numeric(year)) %>%
     mutate(any_teach=if_else(teach_major==1 | teach_minor==1, 1, 0),
            rural=(noncore==1 | micropolitan==1),
            perilevel_plus=if_else(perilevel34==1, 1, 0),
-           mcaid_unins=if_else(ins_mcaid==1 | ins_self==1, 1, 0))
+           mcaid_unins=if_else(ins_mcaid==1 | ins_self==1, 1, 0),
+           atlanta=if_else(mkt==9, 1, 0))
     
 
 
@@ -91,7 +92,7 @@ mkt.path="atl-only"
 ##markets <- c(2,3,4,5,6,7,8,10,11)
 markets <- c(9)
 var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
-var2 <- c("ci_scorent","age","nhwhite","nhblack","mcaid_unins","obgyn_10kwra")
+var2 <- c("ci_scorent","age","nhwhite","nhblack","hispanic","mcaid_unins","obgyn_10kwra")
 pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect")
 pfx.inc <- c(1,1,1,0.01)
 

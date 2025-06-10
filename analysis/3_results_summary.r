@@ -403,8 +403,8 @@ for (var in hist.list) {
 
 
 # Loop through each variable in hist.list and pat.list (binary variables only)
-pat.list <- c("nhwhite","mcaid_unins")
-pat.labels <- c("White", "Medicaid")
+pat.list <- c("nhwhite","mcaid_unins","hispanic")
+pat.labels <- c("White", "Medicaid","Hispanic")
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
