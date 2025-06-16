@@ -1,32 +1,5 @@
-# Market summary statistics -----------------------------------------------
+# Primary Descriptive Stats -----------------------------------------------
 
-## most common city per market
-mkt.city <- delivery.dat %>% filter(facility_city!="_UNIN", !is.na(facility_city)) %>%
-    group_by(mkt) %>%
-    count(facility_city, sort = TRUE) %>%
-    slice_max(n, n = 1, with_ties = FALSE) %>%
-    ungroup() %>%
-    select(mkt, city=facility_city)
-
-## raw stats (allows for out of market facility choice)
-market.stats1 <- delivery.dat %>%
-    group_by(mkt) %>%
-    summarize(n_deliveries=n(), 
-              n_facilities=n_distinct(facility_d),
-              n_patients=n_distinct(alias_to_mother_longid)) %>%
-    left_join(mkt.city, by="mkt")
-
-
-## choice stats (only in-market facility choice)
-market.stats2 <- choice.reg %>% filter(choice==TRUE) %>%
-    group_by(mkt) %>%
-    summarize(n_deliveries=n(), 
-              n_facilities=n_distinct(facility_d),
-              n_patients=n_distinct(patid),
-              mean_dist=mean(diff_dist, na.rm=TRUE)) %>%
-    left_join(mkt.city, by="mkt")              
-
-## Atlanta versus other
 market.table <- choice.reg %>% filter(choice==TRUE) %>%
     group_by(atlanta) %>%
     summarize(n_deliveries=n(), 
@@ -201,18 +174,47 @@ for (r in panel_rows) {
 }
 
 # Export to Word
-doc <- read_docx() %>%
+sum_stats <- read_docx() %>%
   body_add_flextable(value = ft) %>%
   body_add_par("", style = "Normal")
 
+print(sum_stats, target = "results/tables/sum_stats.docx")
 
-print(doc, target = "results/tables/sum_stats.docx")
+
+# Individual markets -----------------------------------------------
+
+## most common city per market
+mkt.city <- delivery.dat %>% filter(facility_city!="_UNIN", !is.na(facility_city)) %>%
+    group_by(mkt) %>%
+    count(facility_city, sort = TRUE) %>%
+    slice_max(n, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    select(mkt, city=facility_city)
+
+## raw stats (allows for out of market facility choice)
+market.stats1 <- delivery.dat %>%
+    group_by(mkt) %>%
+    summarize(n_deliveries=n(), 
+              n_facilities=n_distinct(facility_d),
+              n_patients=n_distinct(alias_to_mother_longid)) %>%
+    left_join(mkt.city, by="mkt")
 
 
+## choice stats (only in-market facility choice)
+market.stats2 <- choice.reg %>% filter(choice==TRUE) %>%
+    group_by(mkt) %>%
+    summarize(n_deliveries=n(), 
+              n_facilities=n_distinct(facility_d),
+              n_patients=n_distinct(patid),
+              mean_dist=mean(diff_dist, na.rm=TRUE)) %>%
+    left_join(mkt.city, by="mkt")              
+
+write.csv(market.stats2, "results/tables/market_detail.csv", row.names=FALSE)
 
 
 # Linear regressions ---------------------------------------------------
 
+## FE regressions as basic summary (note teaching status and perinatal level are essentially time-invariant, so not included in the regression)
 reg.dat <- delivery.dat %>%
     group_by(mkt, year) %>%
     mutate(mkt_deliveries=n()) %>%
@@ -244,27 +246,26 @@ for (m in 2:11) {
 modelsummary(q.models,
              coef_rename=c("c_section_elect" = "Elective C-Section Rate"),
              gof_omit='DF|F|Lik|AIC|BIC|Adj',
-             output="results/tables/req_ln_q.csv")
+             output="results/tables/reg_ln_q.csv")
 
 modelsummary(share.models,
              coef_rename=c("c_section_elect" = "Elective C-Section Rate"),
              gof_omit='DF|F|Lik|AIC|BIC|Adj',
-             output="results/tables/req_share.csv")             
+             output="results/tables/reg_share.csv")             
 
 
 # Choice summary statistics ---------------------------------------------
 
-## Atlanta market
 datasummary_balance(~choice, data= choice.reg %>%
                              select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
                                     teach_major, teach_minor, any_teach, c_section_elect,
                                     ci_score, ci_scorent),
                              fmt=fmt_decimal(digits=4),
-                             output="results/tables/choice_stats.csv")
+                             output="results/tables/logit_stats_by_choice.csv")
 
 datasummary_skim(data= choice.reg %>%
                              select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
                                     teach_major, teach_minor, any_teach, c_section_elect,
                                     ci_score, ci_scorent),
                             fmt=fmt_decimal(digits=4),
-                            output="results/tables/choice_stats_detail.csv")
+                            output="results/tables/logit_stats.csv")

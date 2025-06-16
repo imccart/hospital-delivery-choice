@@ -2,7 +2,7 @@
 ## Title:         Estimate Georgia Delivery Choice
 ## Author:        Ian McCarthy
 ## Date Created:  10/12/2020 (from prior repo)
-## Date Edited:   12/20/2024
+## Date Edited:   6/10/2025
 
 
 # Preliminaries -----------------------------------------------------------
@@ -79,18 +79,21 @@ choice.reg <- choice.dat %>% mutate(year=as.numeric(year)) %>%
 # Descriptive statistics -----------------------------------------------
 
 source("analysis/1_descriptive_stats.R")
-write.csv(market.stats2, "results/tables/market_stats.csv", row.names=FALSE)
 
 
 # Estimate Choice Model ------------------------------------------------
 
 ## Parameters for estimation
 n_boot=500
-mkt.path="atl-only"
-##mkt.path="excluding-atl"
+##mkt.path="atl-only"
+##markets <- c(9)
+
+mkt.path="excluding-atl"
+markets <- c(2,3,4,5,6,7,8,10,11)
+
+##mkr.path="all-markets"
 ##markets <- c(2,3,4,5,6,7,8,9,10,11)
-##markets <- c(2,3,4,5,6,7,8,10,11)
-markets <- c(9)
+
 var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
 var2 <- c("ci_scorent","age","nhwhite","nhblack","hispanic","mcaid_unins","obgyn_10kwra")
 pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect")
@@ -101,58 +104,7 @@ source("analysis/2_estimation.R")
 # Summarize Results ----------------------------------------------------
 
 source("analysis/3_results_summary.R")
-write.csv(summary.table, paste0("results/tables/",mkt.path,"/coefficients.csv"), row.names=FALSE)
+write.csv(coefficient.table, paste0("results/tables/",mkt.path,"/coefficients.csv"), row.names=FALSE)
 write.csv(pfx.data, paste0("results/tables/",mkt.path,"/partial_effects.csv"), row.names=FALSE)
+print(summary_table, target = paste0("results/tables/pfx_means_",mkt.path,".docx"))
 
-
-
-
-
-
-
-
-
-
-# Test code ------------------------------------------------------------
-
-choice.reg %>% group_by(id) %>% summarize(min_mkt=min(mkt.y), max_mkt=max(mkt.y)) %>% filter(min_mkt!=max_mkt)
-
-plot_slopes(models[[1]], variables="c_section_elect", condition="ins_mcaid")
-avg.effects <- tibble()
-for (i in 1:9) {
-    avg.effects[i,1]=avg_slopes(models[[i]], variables="psi_90")$estimate
-}
-
-
-test.est <- estimate_choice_model(
-    market = 5,
-    var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect", "psi_90"),
-    var2 <- c("ci_scorent","age","nhwhite","mcaid_unins","obgyn_10kwra"),
-    pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect", "psi_90"),
-    pfx.inc <- c(1,1,1,0.01,0.1),
-    data = choice.reg %>% filter(year>=2020)
-  )
-
-##avg_slopes(test.est$model, variables="psi_90")
-##avg_predictions(test.est$model, variables="psi_90")
-
-
-test.est$predictions %>%
-      mutate(ch_dist=pred_diff_dist1 - pred_prob,
-              ch_psi=pred_psi_901 - pred_prob) %>%
-      group_by(mkt, choice) %>%
-      summarize(mean_psi=mean(ch_psi, na.rm=TRUE))
-
-datasummary_skim(data= choice.reg %>% filter(mkt==2, year==2016) %>%
-                             select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
-                                    psi_90, teach_major, teach_minor, any_teach, c_section_elect,
-                                    ci_score, ci_scorent),
-                            fmt=fmt_decimal(digits=4))
-
-datasummary_crosstab(data= choice.reg %>% filter(mkt==2, year==2016) %>%
-                             select(choice, diff_dist, perilevel_plus, perilevel2, perilevel34,
-                                    psi_90, teach_major, teach_minor, any_teach, c_section_elect,
-                                    ci_score, ci_scorent),
-                     psi_90 ~ choice,
-                     statistic = 1 ~ Percent("col"),
-                     fmt=fmt_decimal(digits=4))

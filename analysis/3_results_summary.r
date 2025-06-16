@@ -36,7 +36,7 @@ processed.summaries <- lapply(seq_along(summaries), function(i) {
 })
 
 # Combine all processed summaries by joining them on "term" and "stat"
-summary.table <- reduce(processed.summaries, full_join, by = c("term", "stat"))
+coefficient.table <- reduce(processed.summaries, full_join, by = c("term", "stat"))
 
 
 # Partial Effects -------------------------------------------------------
@@ -143,6 +143,9 @@ pfx.data <- pfx.long %>%
 # Loop through each variable in hist.list and pat.list (continuous variables only)
 pat.list <- c("age")
 pat.labels <- c("Age")
+pfx.cont <- list()
+pfx.cont.mkt <- list()
+
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
@@ -267,12 +270,17 @@ for (var in hist.list) {
       filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
       plot = plot, width = 8, height = 6, dpi = 300
     )
+    
+    pfx.cont[[paste0(var, "_", pat.var)]] <- effects
+    pfx.cont.mkt[[paste0(var, "_", pat.var)]] <- effects_mkt
   }
 }
 
 # Loop through each variable in hist.list and pat.list (quantiles)
 pat.list <- c("ci_scorent", "obgyn_10kwra")
 pat.labels <- c("CI Score", "OB/GYN per 10,000")
+pfx.qntl <- list()
+pfx.qntl.mkt <- list()
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
@@ -291,16 +299,17 @@ for (var in hist.list) {
     group_by(mkt) %>%
     mutate(
       bin = case_when(
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.2, na.rm = TRUE) ~ "20",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.4, na.rm = TRUE) ~ "40",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.6, na.rm = TRUE) ~ "60",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.8, na.rm = TRUE) ~ "80",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.1, na.rm = TRUE) ~ "10",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.25, na.rm = TRUE) ~ "25",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.5, na.rm = TRUE) ~ "50",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.75, na.rm = TRUE) ~ "75",
+        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.90, na.rm = TRUE) ~ "90",
         TRUE ~ "100"
       )
     ) %>%
     ungroup() %>%
     filter(!is.na(bin)) %>%
-    mutate(bin = factor(bin, levels = c("20", "40", "60", "80", "100")))
+    mutate(bin = factor(bin, levels = c("10", "25", "50", "75", "90","100")))
 
     # Compute effects by bins for the current continuous variable
     effects <- graph.final %>%
@@ -397,14 +406,20 @@ for (var in hist.list) {
       filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
       plot = plot, width = 8, height = 6, dpi = 300
     )
+
+    pfx.qntl[[paste0(var, "_", pat.var)]] <- effects
+    pfx.qntl.mkt[[paste0(var, "_", pat.var)]] <- effects_mkt
+
   }
 }
 
 
 
 # Loop through each variable in hist.list and pat.list (binary variables only)
-pat.list <- c("nhwhite","mcaid_unins","hispanic")
-pat.labels <- c("White", "Medicaid","Hispanic")
+pat.list <- c("nhblack","mcaid_unins","hispanic")
+pat.labels <- c("Black", "Medicaid","Hispanic")
+pfx.bin <- list()
+pfx.bin.mkt <- list()
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
@@ -422,7 +437,7 @@ for (var in hist.list) {
       filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1)
   
     # Compute overall weighted effects by binary variable
-    if (pat.var=="nhwhite") {
+    if (pat.var=="nhblack") {
       effects <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         filter(nhwhite==1 | nhblack==1) %>%
@@ -540,5 +555,104 @@ for (var in hist.list) {
       filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
       plot = plot, width = 8, height = 6, dpi = 300
     )
+
+    pfx.bin[[paste0(var, "_", pat.var)]] <- effects
+    pfx.bin.mkt[[paste0(var, "_", pat.var)]] <- effects_mkt
+
   }
 }
+
+
+## Combine into table format
+target_bin_label <- "(28.2,36.8]"
+##target_bin_label <- "(28.6,37.4]"
+summary_means1 <- purrr::map_dfr(
+  .x = names(pfx.cont),
+  .f = function(nm) {
+    tbl <- pfx.cont[[nm]] %>% filter(bin == target_bin_label)
+    if (nrow(tbl) == 0) return(NULL)
+
+    tibble(
+      group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
+      outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
+      mean = tbl$mean
+    )
+  }
+) %>%
+  pivot_wider(names_from = outcome, values_from = mean) %>%
+  relocate(group)
+
+
+# Choose the bin you want
+target_bin <- 50
+summary_means2 <- map_dfr(
+  .x = names(pfx.qntl),
+  .f = function(nm) {
+    tbl <- pfx.qntl[[nm]] %>% filter(bin == target_bin)
+    if (nrow(tbl) == 0) return(NULL) 
+
+    tibble(
+      group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
+      outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
+      mean = tbl$mean
+    )
+  }
+) %>%
+  pivot_wider(names_from = outcome, values_from = mean) %>%
+  relocate(group)
+
+summary_means3 <- map_dfr(
+  .x = names(pfx.bin),
+  .f = function(nm) {
+    tbl <- pfx.bin[[nm]]
+    if (!all(c(0, 1) %in% tbl[[1]])) return(NULL)
+
+    diff <- tbl$mean[which(tbl[[1]] == 1)] - tbl$mean[which(tbl[[1]] == 0)]
+
+    tibble(
+      group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
+      outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
+      diff = diff
+    )
+  }
+) %>%
+  pivot_wider(names_from = outcome, values_from = diff) %>%
+  relocate(group)
+
+summary_means <- bind_rows(summary_means1, summary_means2, summary_means3) %>%
+  mutate(Row = c(
+    "Age",
+    "Leonard Obstetric Comorbidity Score",
+    "Ob/Gyns per 10,000 WRA in County",
+    "Medicaid vs Private Insured",
+    "Non-Hispanic White vs Non-Hispanic Black",
+    "Hispanic vs Non-Hispanic"
+  )) %>%
+  select(Row, ch_dist, ch_peri, ch_teach, ch_csection) %>%
+  mutate(across(-Row, ~ round(.x, 3)))
+
+# Create formatted table
+ft <- flextable(summary_means) |>
+  set_header_labels(
+    Row = "",
+    ch_dist = "Distance",
+    ch_peri = "Perinatal\nLevel of Care 2+",
+    ch_teach = "Minor or Major\nTeaching Hospital",
+    ch_csection = "Elective\nC-Section Rate"
+  ) |>
+  theme_booktabs() |>
+  width(j = 1, width = 2.8) |>        # Wider row label column
+  width(j = 2:5, width = 1.4) |>      # Narrower columns for wrapping
+  align(align = "center", part = "all") |>
+  align(j = 1, align = "left", part = "all") |>
+  fontsize(size = 10, part = "all") |>
+  valign(valign = "top", part = "all") |>
+  set_table_properties(layout = "fixed")
+
+# Export to Word
+summary_table <- read_docx() |>
+  body_add_par("Summary of Marginal Effects by Patient and Area Characteristics", style = "heading 1") |>
+  body_add_flextable(ft)
+
+
+
