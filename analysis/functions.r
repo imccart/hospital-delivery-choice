@@ -181,19 +181,35 @@ bootstrap_choice_model <- function(markets, var1, var2, pfx.vars, pfx.inc, data,
       # Step 1: Resample the data for the market with replacement
       market_data <- data %>% filter(mkt == market)
       sampled_ids <- sample(unique(market_data$id), size = length(unique(market_data$id)), replace = TRUE)
-      resampled_data <- market_data %>% filter(id %in% sampled_ids)
-      
+      # resampled_data <- market_data %>% filter(id %in% sampled_ids)
+
+      # Create a data frame with a row for each sampled ID, preserving duplicates
+      boot_ids <- tibble(sampled_id = sampled_ids, boot_id = seq_along(sampled_ids))
+
+      # Join back to market_data
+      resampled_data <- boot_ids %>%
+        left_join(market_data, by = c("sampled_id" = "id")) %>%
+        mutate(orig_id=sampled_id,
+               id = boot_id) %>%
+        select(-sampled_id)
+
       # Step 2: Estimate the choice model on the resampled data
       boot_model <- estimate_choice_model(market, var1, var2, pfx.vars, pfx.inc, resampled_data)
       
       # Store predictions from the current bootstrap iteration
       boot_preds[[b]] <- boot_model$predictions %>%
+                      left_join(resampled_data %>% select(id, orig_id, patid, facility, year, mkt, date_delivery),
+                          by = c("id","patid","facility","year","mkt","date_delivery")) %>%
+                      mutate(id = orig_id) %>%
                       filter(choice==1) %>%
                       mutate(ch_dist = pred_diff_dist1 - pred_prob,
                              ch_peri = pred_perilevel_plus1 - pred_perilevel_plus0,
                              ch_teach = pred_any_teach1 - pred_any_teach0,
                              ch_csection = pred_c_section_elect1 - pred_prob,
                              boot_rep = b) %>%
+                      group_by(id, patid, facility, year, mkt, date_delivery, boot_rep) %>%
+                      slice(1) %>% 
+                      ungroup() %>%
                       select(id, patid, facility, year, mkt, date_delivery, boot_rep, starts_with("ch_"))
       
     }

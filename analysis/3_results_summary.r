@@ -479,9 +479,21 @@ for (var in hist.list) {
     boot.se <- boot.long %>%
       group_by(.data[[pat.var]]) %>%
       summarize(sd = sd(.data[[var]], na.rm = TRUE))
-      
+
+    boot.diff <- boot.long %>%
+      group_by(bootstrap) %>%
+      summarize(
+        diff = .data[[var]][.data[[pat.var]] == 1] - 
+              .data[[var]][.data[[pat.var]] == 0],
+        .groups = "drop"
+      )
+
+    boot.diff.se <- boot.diff %>%
+      summarize(diff_sd = sd(diff, na.rm = TRUE))
+
     effects <- effects %>% 
       left_join(boot.se, by=pat.var) %>%
+      bind_cols(boot.diff.se) %>%
       mutate(l_95=mean-1.96*sd,
              u_95=mean+1.96*sd)
 
@@ -575,11 +587,14 @@ summary_means1 <- purrr::map_dfr(
     tibble(
       group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
       outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
-      mean = tbl$mean
+      mean = tbl$mean,
+      se = tbl$sd,
+      l_95 = tbl$l_95,
+      u_95 = tbl$u_95      
     )
   }
 ) %>%
-  pivot_wider(names_from = outcome, values_from = mean) %>%
+  pivot_wider(names_from = outcome, values_from = c(mean, se, l_95, u_95)) %>%
   relocate(group)
 
 
@@ -594,11 +609,14 @@ summary_means2 <- map_dfr(
     tibble(
       group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
       outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
-      mean = tbl$mean
+      mean = tbl$mean,
+      se = tbl$sd,
+      l_95 = tbl$l_95,
+      u_95 = tbl$u_95      
     )
   }
 ) %>%
-  pivot_wider(names_from = outcome, values_from = mean) %>%
+  pivot_wider(names_from = outcome, values_from = c(mean, se, l_95, u_95)) %>%
   relocate(group)
 
 summary_means3 <- map_dfr(
@@ -608,16 +626,22 @@ summary_means3 <- map_dfr(
     if (!all(c(0, 1) %in% tbl[[1]])) return(NULL)
 
     diff <- tbl$mean[which(tbl[[1]] == 1)] - tbl$mean[which(tbl[[1]] == 0)]
+    row1 <- tbl %>% filter(.[[1]] == 1)
+    row0 <- tbl %>% filter(.[[1]] == 0)
 
     tibble(
       group = str_remove(nm, "^ch_(dist|peri|teach|csection)_"),
       outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
-      diff = diff
+      mean = diff,
+      se = row1$diff_sd,
+      l_95 = diff - 1.96 * se,
+      u_95 = diff + 1.96 * se      
     )
   }
 ) %>%
-  pivot_wider(names_from = outcome, values_from = diff) %>%
+  pivot_wider(names_from = outcome, values_from = c(mean, se, l_95, u_95)) %>%
   relocate(group)
+
 
 summary_means <- bind_rows(summary_means1, summary_means2, summary_means3) %>%
   mutate(Row = c(
@@ -628,31 +652,32 @@ summary_means <- bind_rows(summary_means1, summary_means2, summary_means3) %>%
     "Non-Hispanic White vs Non-Hispanic Black",
     "Hispanic vs Non-Hispanic"
   )) %>%
-  select(Row, ch_dist, ch_peri, ch_teach, ch_csection) %>%
-  mutate(across(-Row, ~ round(.x, 3)))
+  mutate(
+    ch_dist = str_glue("{sprintf('%.4f', mean_ch_dist)}\n({sprintf('%.4f', se_ch_dist)})\n[{sprintf('%.4f', l_95_ch_dist)}, {sprintf('%.4f', u_95_ch_dist)}]"),
+    ch_peri = str_glue("{sprintf('%.4f', mean_ch_peri)}\n({sprintf('%.4f', se_ch_peri)})\n[{sprintf('%.4f', l_95_ch_peri)}, {sprintf('%.4f', u_95_ch_peri)}]"),
+    ch_teach = str_glue("{sprintf('%.4f', mean_ch_teach)}\n({sprintf('%.4f', se_ch_teach)})\n[{sprintf('%.4f', l_95_ch_teach)}, {sprintf('%.4f', u_95_ch_teach)}]"),
+    ch_csection = str_glue("{sprintf('%.4f', mean_ch_csection)}\n({sprintf('%.4f', se_ch_csection)})\n[{sprintf('%.4f', l_95_ch_csection)}, {sprintf('%.4f', u_95_ch_csection)}]")
+  ) %>%
+  select(Row, ch_dist, ch_peri, ch_teach, ch_csection)
 
-# Create formatted table
-ft <- flextable(summary_means) |>
+ft <- flextable(summary_means) %>%
   set_header_labels(
     Row = "",
     ch_dist = "Distance",
     ch_peri = "Perinatal\nLevel of Care 2+",
     ch_teach = "Minor or Major\nTeaching Hospital",
     ch_csection = "Elective\nC-Section Rate"
-  ) |>
-  theme_booktabs() |>
-  width(j = 1, width = 2.8) |>        # Wider row label column
-  width(j = 2:5, width = 1.4) |>      # Narrower columns for wrapping
-  align(align = "center", part = "all") |>
-  align(j = 1, align = "left", part = "all") |>
-  fontsize(size = 10, part = "all") |>
-  valign(valign = "top", part = "all") |>
+  ) %>%
+  theme_booktabs() %>%
+  width(j = 1, width = 2.8) %>%
+  width(j = 2:5, width = 1.4) %>%
+  align(align = "center", part = "all") %>%
+  align(j = 1, align = "left", part = "all") %>%
+  fontsize(size = 10, part = "all") %>%
+  valign(valign = "top", part = "all") %>%
   set_table_properties(layout = "fixed")
 
-# Export to Word
-summary_table <- read_docx() |>
-  body_add_par("Summary of Marginal Effects by Patient and Area Characteristics", style = "heading 1") |>
+# Export to word
+summary_table <- read_docx() %>%
+  body_add_par("Summary of Marginal Effects by Patient and Area Characteristics", style = "heading 1") %>%
   body_add_flextable(ft)
-
-
-
