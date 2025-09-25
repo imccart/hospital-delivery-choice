@@ -85,11 +85,14 @@ source("analysis/1_descriptive_stats.R")
 
 ## Parameters for estimation
 n_boot=500
-##mkt.path="atl-only"
-##markets <- c(9)
+mkt.path="atl-only"
+markets <- c(9)
+target_bin_label <- "(28.6,37.4]"   # for future summary of mean effects, need to select proper bin
 
-mkt.path="excluding-atl"
-markets <- c(2,3,4,5,6,7,8,10,11)
+##mkt.path="excluding-atl"
+##markets <- c(2,3,4,5,6,7,8,10,11)
+##target_bin_label <- "(28.2,36.8]" # for future summary of mean effects, need to select proper bin
+
 
 ##mkr.path="all-markets"
 ##markets <- c(2,3,4,5,6,7,8,9,10,11)

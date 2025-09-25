@@ -576,8 +576,6 @@ for (var in hist.list) {
 
 
 ## Combine into table format
-target_bin_label <- "(28.2,36.8]"
-##target_bin_label <- "(28.6,37.4]"
 summary_means1 <- purrr::map_dfr(
   .x = names(pfx.cont),
   .f = function(nm) {
