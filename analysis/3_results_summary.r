@@ -438,36 +438,53 @@ for (var in hist.list) {
   
     # Compute overall weighted effects by binary variable
     if (pat.var=="nhblack") {
-      effects <- graph.final %>%
+      temp <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         filter(nhwhite==1 | nhblack==1) %>%
-        group_by(.data[[pat.var]]) %>%
-        summarize(
-          mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)
-        ) %>%
+        group_by(.data[[pat.var]])
+    } else {
+      temp <- graph.final %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+        group_by(.data[[pat.var]]) 
+    }
+
+    if (mkt.path == "atl-only") {
+      effects <- temp %>%
+        summarize(mean = mean(.data[[var]], na.rm = TRUE)) %>%
         ungroup()
     } else {
-      effects <- graph.final %>%
-        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-        group_by(.data[[pat.var]]) %>%
-        summarize(
-          mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)
-        ) %>%
+      effects <- temp %>%
+        summarize(mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)) %>%
         ungroup()
     }
 
-    boot.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
-      group_by(.data[[pat.var]]) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
+    if (mkt.path=="atl-only") {
+      boot.wide <- graph.final %>%
+        left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
+        group_by(.data[[pat.var]]) %>%
+        summarize(
+          across(
+            all_of(boot.vars),
+            list(
+                boot_mean = ~ mean(.x, na.rm = TRUE)
+            ),
+            .names = "{.col}_mean"
+          ))
+    } else {
+      boot.wide <- graph.final %>%
+        left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
+        group_by(.data[[pat.var]]) %>%
+        summarize(
+          across(
+            all_of(boot.vars),
+            list(
+                boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
+            ),
+            .names = "{.col}_mean"
+          ))
+    }
 
     boot.long <- boot.wide %>%
       pivot_longer(
@@ -499,13 +516,24 @@ for (var in hist.list) {
 
 
     # Compute market-level effects by binary variable
-    effects_mkt <- graph.final %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-      group_by(.data[[pat.var]], mkt) %>%
-      summarize(
-        mean = mean(.data[[var]], na.rm = TRUE)
-      ) %>%
-      ungroup()
+    if (pat.var=="nhblack") {
+      effects_mkt <- graph.final %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+        filter(nhwhite==1 | nhblack==1) %>%
+        group_by(.data[[pat.var]], mkt) %>%
+        summarize(
+          mean = mean(.data[[var]], na.rm = TRUE)
+        ) %>%
+        ungroup()
+    } else {
+      effects_mkt <- graph.final %>%
+        left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+        group_by(.data[[pat.var]], mkt) %>%
+        summarize(
+          mean = mean(.data[[var]], na.rm = TRUE)
+        ) %>%
+        ungroup()
+    }
 
     boot_mkt.wide <- graph.final %>%
       left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
