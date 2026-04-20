@@ -707,3 +707,30 @@ ft <- flextable(summary_means) %>%
 summary_table <- read_docx() %>%
   body_add_par("Summary of Marginal Effects by Patient and Area Characteristics", style = "heading 1") %>%
   body_add_flextable(ft)
+
+
+# Save aggregated partial-effects for HSR figure iteration ---------------
+# Flatten each list-of-data-frames into a single long-form CSV with
+# outcome + patient_char columns. Loaded by analysis/4_hsr_figures.R.
+
+flatten_pfx <- function(lst) {
+  map2_dfr(names(lst), lst, function(nm, df) {
+    df %>%
+      mutate(outcome = str_extract(nm, "^ch_(dist|peri|teach|csection)"),
+             patient_char = str_remove(nm, "^ch_(dist|peri|teach|csection)_")) %>%
+      select(outcome, patient_char, everything())
+  })
+}
+
+write.csv(flatten_pfx(pfx.cont),
+          paste0("results/tables/", mkt.path, "/pfx_cont.csv"), row.names = FALSE)
+write.csv(flatten_pfx(pfx.cont.mkt),
+          paste0("results/tables/", mkt.path, "/pfx_cont_mkt.csv"), row.names = FALSE)
+write.csv(flatten_pfx(pfx.qntl),
+          paste0("results/tables/", mkt.path, "/pfx_qntl.csv"), row.names = FALSE)
+write.csv(flatten_pfx(pfx.qntl.mkt),
+          paste0("results/tables/", mkt.path, "/pfx_qntl_mkt.csv"), row.names = FALSE)
+write.csv(flatten_pfx(pfx.bin),
+          paste0("results/tables/", mkt.path, "/pfx_bin.csv"), row.names = FALSE)
+write.csv(flatten_pfx(pfx.bin.mkt),
+          paste0("results/tables/", mkt.path, "/pfx_bin_mkt.csv"), row.names = FALSE)
