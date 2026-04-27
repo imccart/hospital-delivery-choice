@@ -5,6 +5,65 @@ is_binary <- function(x) {
   all(unique_vals %in% c(0, 1)) && length(unique_vals) <= 2
 }
 
+# Binning helpers (used by both main estimates and the bootstrap so they match) ----
+apply_age_bin <- function(x, breaks) {
+  cut(x, breaks = breaks, include.lowest = TRUE)
+}
+
+apply_qntl_bin <- function(x, qb) {
+  out <- case_when(
+    x <= qb["q10"] ~ "10",
+    x <= qb["q25"] ~ "25",
+    x <= qb["q50"] ~ "50",
+    x <= qb["q75"] ~ "75",
+    x <= qb["q90"] ~ "90",
+    TRUE ~ "100"
+  )
+  factor(out, levels = c("10","25","50","75","90","100"))
+}
+
+summarize_boot_rep <- function(per_rep, bin_spec, b, market_id) {
+  hist.list <- c("ch_dist","ch_peri","ch_teach","ch_csection")
+  qb_ci <- bin_spec$ci_scorent$qbreaks_by_mkt %>% filter(mkt == market_id)
+  qb_ci <- c(q10=qb_ci$q10, q25=qb_ci$q25, q50=qb_ci$q50, q75=qb_ci$q75, q90=qb_ci$q90)
+  qb_ob <- bin_spec$obgyn_10kwra$qbreaks_by_mkt %>% filter(mkt == market_id)
+  qb_ob <- c(q10=qb_ob$q10, q25=qb_ob$q25, q50=qb_ob$q50, q75=qb_ob$q75, q90=qb_ob$q90)
+
+  out <- list()
+  for (var in hist.list) {
+    rep <- per_rep %>% filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1)
+
+    overall <- rep %>% summarize(mean = mean(.data[[var]], na.rm=TRUE)) %>%
+      mutate(group_var="overall", bin=NA_character_)
+    age      <- rep %>% mutate(bin = as.character(apply_age_bin(age, bin_spec$age$breaks))) %>%
+      filter(!is.na(bin)) %>% group_by(bin) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="age")
+    ci       <- rep %>% mutate(bin = as.character(apply_qntl_bin(ci_scorent, qb_ci))) %>%
+      filter(!is.na(bin)) %>% group_by(bin) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="ci_scorent")
+    ob       <- rep %>% mutate(bin = as.character(apply_qntl_bin(obgyn_10kwra, qb_ob))) %>%
+      filter(!is.na(bin)) %>% group_by(bin) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="obgyn_10kwra")
+    blk      <- rep %>% filter(nhwhite == 1 | nhblack == 1) %>%
+      group_by(bin = as.character(nhblack)) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="nhblack")
+    mcd      <- rep %>% group_by(bin = as.character(mcaid_unins)) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="mcaid_unins")
+    hsp      <- rep %>% group_by(bin = as.character(hispanic)) %>%
+      summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
+      mutate(group_var="hispanic")
+
+    out[[var]] <- bind_rows(overall, age, ci, ob, blk, mcd, hsp) %>%
+      mutate(outcome = var, mkt = market_id, boot_rep = b)
+  }
+  bind_rows(out)
+}
+
 # Define the choice estimation function
 estimate_choice_model <- function(market, var1, var2, pfx.vars, pfx.inc, data) {
   
@@ -163,64 +222,48 @@ estimate_choice_model <- function(market, var1, var2, pfx.vars, pfx.inc, data) {
 
 
 
-bootstrap_choice_model <- function(markets, var1, var2, pfx.vars, pfx.inc, data, n_bootstrap) {
-  
-  # Initialize an empty list to store results for all markets
+bootstrap_choice_model <- function(markets, var1, var2, pfx.vars, pfx.inc, data,
+                                   n_bootstrap, bin_spec) {
+
   boot_results <- list()
-  
-  # Loop over each market
+
   for (market in markets) {
     cat("Processing market:", market, "\n")
-    
-    # Store bootstrap predictions for the current market
-    boot_preds <- vector("list", n_bootstrap)
-    
-    # Perform bootstrapping
+    boot_summaries <- vector("list", n_bootstrap)
+
     for (b in 1:n_bootstrap) {
-
-      # Step 1: Resample the data for the market with replacement
       market_data <- data %>% filter(mkt == market)
-      sampled_ids <- sample(unique(market_data$id), size = length(unique(market_data$id)), replace = TRUE)
-      # resampled_data <- market_data %>% filter(id %in% sampled_ids)
-
-      # Create a data frame with a row for each sampled ID, preserving duplicates
+      sampled_ids <- sample(unique(market_data$id),
+                            size = length(unique(market_data$id)), replace = TRUE)
       boot_ids <- tibble(sampled_id = sampled_ids, boot_id = seq_along(sampled_ids))
 
-      # Join back to market_data
       resampled_data <- boot_ids %>%
-        left_join(market_data, by = c("sampled_id" = "id")) %>%
-        mutate(orig_id=sampled_id,
-               id = boot_id) %>%
+        left_join(market_data, by = c("sampled_id" = "id"),
+                  relationship = "many-to-many") %>%
+        mutate(orig_id = sampled_id, id = boot_id) %>%
         select(-sampled_id)
 
-      # Step 2: Estimate the choice model on the resampled data
-      boot_model <- estimate_choice_model(market, var1, var2, pfx.vars, pfx.inc, resampled_data)
-      
-      # Store predictions from the current bootstrap iteration
-      boot_preds[[b]] <- boot_model$predictions %>%
-                      left_join(resampled_data %>% select(id, orig_id, patid, facility, year, mkt, date_delivery),
-                          by = c("id","patid","facility","year","mkt","date_delivery")) %>%
-                      mutate(id = orig_id) %>%
-                      filter(choice==1) %>%
-                      mutate(ch_dist = pred_diff_dist1 - pred_prob,
-                             ch_peri = pred_perilevel_plus1 - pred_perilevel_plus0,
-                             ch_teach = pred_any_teach1 - pred_any_teach0,
-                             ch_csection = pred_c_section_elect1 - pred_prob,
-                             boot_rep = b) %>%
-                      group_by(id, patid, facility, year, mkt, date_delivery, boot_rep) %>%
-                      slice(1) %>% 
-                      ungroup() %>%
-                      select(id, patid, facility, year, mkt, date_delivery, boot_rep, starts_with("ch_"))
-      
+      boot_model <- estimate_choice_model(market, var1, var2, pfx.vars, pfx.inc,
+                                          resampled_data)
+
+      per_rep <- boot_model$predictions %>%
+        left_join(resampled_data %>%
+                    select(id, patid, facility, year, mkt, date_delivery,
+                           age, ci_scorent, obgyn_10kwra,
+                           nhblack, nhwhite, mcaid_unins, hispanic),
+                  by = c("id","patid","facility","year","mkt","date_delivery")) %>%
+        filter(choice == 1) %>%
+        mutate(ch_dist     = pred_diff_dist1       - pred_prob,
+               ch_peri     = pred_perilevel_plus1  - pred_perilevel_plus0,
+               ch_teach    = pred_any_teach1       - pred_any_teach0,
+               ch_csection = pred_c_section_elect1 - pred_prob)
+
+      boot_summaries[[b]] <- summarize_boot_rep(per_rep, bin_spec, b, market)
+
+      rm(per_rep, boot_model, resampled_data, market_data, boot_ids, sampled_ids)
+      gc(verbose = FALSE)
     }
-    
-    all_boot_pred <- bind_rows(boot_preds)
-        
-    # Store the summarized results for the market
-    boot_results[[paste0("market_", market)]] <- pivot_wider(all_boot_pred, 
-                                                    names_from=boot_rep, 
-                                                    values_from=starts_with("ch_"))
+    boot_results[[paste0("market_", market)]] <- bind_rows(boot_summaries)
   }
-  
-  return(boot_results)
+  bind_rows(boot_results)
 }

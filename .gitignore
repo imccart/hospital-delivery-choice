@@ -3,3 +3,7 @@ drafts/*
 CLAUDE.md
 scratch/
 _emails/
+.Rproj.user
+.positai
+.Rhistory
+results/tables/*/boot_reps/debug.log

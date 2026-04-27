@@ -9,10 +9,8 @@ market.table <- choice.reg %>% filter(choice==TRUE) %>%
               n_facilities=n_distinct(facility_d))
 
 hospital.table <- choice.reg %>% filter(choice==TRUE) %>%
-    arrange(facility_d, date_delivery) %>%
-    group_by(facility_d) %>%
-    slice_tail(n=1) %>%
-    ungroup() %>%
+    arrange(facility_d, desc(date_delivery)) %>%
+    distinct(facility_d, .keep_all = TRUE) %>%
     group_by(atlanta) %>%
     summarize(perilevel_plus=mean(perilevel_plus, na.rm=TRUE),
               any_teach=mean(any_teach, na.rm=TRUE),
@@ -20,10 +18,8 @@ hospital.table <- choice.reg %>% filter(choice==TRUE) %>%
 
 patient.table <- choice.reg %>% filter(choice==TRUE) %>%
     mutate(ins_other=ins_other+ins_mcare) %>%
-    arrange(patid, date_delivery) %>%
-    group_by(patid) %>%
-    slice_tail(n=1) %>%
-    ungroup() %>%
+    arrange(patid, desc(date_delivery)) %>%
+    distinct(patid, .keep_all = TRUE) %>%
     group_by(atlanta) %>%
     summarize(age=mean(age, na.rm=TRUE),
               ci_scorent=mean(ci_scorent, na.rm=TRUE),

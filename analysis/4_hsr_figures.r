@@ -1,17 +1,73 @@
-# HSR Main Figures 2-7 ---------------------------------------------------
-# Standalone script: loads aggregated partial-effects CSVs saved at the end
-# of 3_results_summary.R for both market configurations, then produces the
-# six main-text figures (Figures 2-7) as PDFs conforming to HSR requirements
-# (300-600 DPI, sans-serif typeface, percentage-point y-axis, zero reference
-# line, readable axis labels). Figure 1 (market map) is produced separately.
+# HSR Main Figures 1-7 ---------------------------------------------------
+# Standalone script: produces all seven main-text figures for the HSR paper
+# as PDFs (sans-serif/Arial, percentage-point y-axis where applicable, zero
+# reference line). Figure 1 is the labeled market map; Figures 2-7 are the
+# marginal-effects panels.
 #
-# Run after 3_results_summary.R has been executed for both:
-#   mkt.path = "atl-only"
-#   mkt.path = "excluding-atl"
+# Required inputs:
+#   results/tables/atl-only/pfx_*.csv         (from 3_results_summary.R, Atlanta)
+#   results/tables/excluding-atl/pfx_*.csv    (from 3_results_summary.R, outside ATL)
+#   data/input/shapefiles/tl_2020_13_tract10.shp
+#   data/output/hospital_markets.rds
+#   results/tables/market_detail.csv
 
 library(tidyverse)
+library(sf)
+library(ggrepel)
 
 dir.create("results/figures-hsr", showWarnings = FALSE, recursive = TRUE)
+
+
+# ========================================================================
+# Figure 1: Market map
+# ========================================================================
+
+tract.dat <- read_sf("data/input/shapefiles/tl_2020_13_tract10.shp") %>%
+  mutate(GEOID = as.double(GEOID10))
+walktrap.dat  <- read_rds("data/output/hospital_markets.rds")
+market.detail <- read.csv("results/tables/market_detail.csv", stringsAsFactors = FALSE)
+
+merged.dat <- tract.dat %>%
+  left_join(walktrap.dat, by = "GEOID") %>%
+  filter(!is.na(mkt))
+
+cluster.boundaries <- merged.dat %>%
+  group_by(mkt) %>%
+  summarize(geometry = st_union(geometry), .groups = "drop")
+
+label.dat <- cluster.boundaries %>%
+  mutate(centroid = st_centroid(geometry)) %>%
+  st_drop_geometry() %>%
+  left_join(market.detail %>% select(mkt, city, n_facilities, n_deliveries), by = "mkt") %>%
+  mutate(label = sprintf("%s\n(%d hosp., %s del.)",
+                         city, n_facilities,
+                         formatC(n_deliveries, big.mark = ",", format = "d")))
+
+label.coords <- st_coordinates(label.dat$centroid) %>%
+  as.data.frame() %>%
+  bind_cols(label.dat %>% select(label))
+
+market.map <- ggplot() +
+  geom_sf(data = merged.dat, fill = "gray95", color = "gray80", linewidth = 0.1) +
+  geom_sf(data = cluster.boundaries, fill = NA, color = "black", linewidth = 0.6) +
+  geom_label_repel(
+    data = label.coords,
+    aes(x = X, y = Y, label = label),
+    size = 2.8, family = "sans",
+    box.padding = 0.4, label.padding = 0.2,
+    min.segment.length = 0, segment.color = "gray50"
+  ) +
+  coord_sf(datum = NA) +
+  theme_void(base_family = "sans") +
+  theme(plot.margin = margin(5, 5, 5, 5))
+
+ggsave("results/figures-hsr/figure_1_market_map.pdf",
+       market.map, device = cairo_pdf, width = 7, height = 9)
+
+
+# ========================================================================
+# Figures 2-7: Marginal effects
+# ========================================================================
 
 
 # Load aggregated partial effects ----------------------------------------
@@ -214,4 +270,4 @@ save_hsr(fig5, "figure_5_atlanta_age_csection")
 save_hsr(fig6, "figure_6_atlanta_oci_csection")
 save_hsr(fig7, "figure_7_atlanta_obgyn_csection")
 
-cat("HSR Figures 2-7 written to results/figures-hsr/\n")
+cat("HSR Figures 1-7 written to results/figures-hsr/\n")

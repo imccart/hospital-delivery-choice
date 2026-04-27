@@ -20,5 +20,5 @@ for (market in markets) {
   
 }
 
-bootstraps <- bootstrap_choice_model(markets, var1, var2, pfx.vars, pfx.inc, choice.reg, n_bootstrap = n_boot)
-final.boot <- bind_rows(bootstraps)  
+final.boot <- bootstrap_choice_model(markets, var1, var2, pfx.vars, pfx.inc, choice.reg,
+                                     n_bootstrap = n_boot, bin_spec = bin_spec)

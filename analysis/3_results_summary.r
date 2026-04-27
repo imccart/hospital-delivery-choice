@@ -43,11 +43,6 @@ coefficient.table <- reduce(processed.summaries, full_join, by = c("term", "stat
 
 final.predictions <- bind_rows(all.predictions)
 hist.list <- c("ch_dist", "ch_peri", "ch_teach", "ch_csection")
-boot.list <- unlist(
-  lapply(hist.list, function(var) {
-    paste0(var, "_", 1:n_boot)
-  })
-)
 
 logit.final <- choice.reg %>%
        inner_join(final.predictions, by=c("id","choice","year","patid","facility","mkt")) %>%
@@ -100,37 +95,16 @@ pfx.long <- pfx.wide %>%
   )
 
 
-boot.wide <- final.boot %>% left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
-    ungroup() %>%
-    summarize(
-      across(
-        all_of(boot.list),
-        list(
-          mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
-        ),
-        .names = "{.col}_{.fn}"
-      )) 
-
-boot.long <- boot.wide %>%
-  pivot_longer(
-    cols = matches("_[0-9]+_mean$"),
-    names_to = c(".value", "bootstrap"),
-    names_pattern = "(.*)_([0-9]+)_mean$"
-  )
-
-boot.se <- boot.long %>%
-  summarize(
-    across(
-      c(hist.list),
-      ~ sd(.x, na.rm = TRUE),
-      .names = "{.col}"
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "se"
-  )  
+## SE per outcome from per-rep, per-market overall means
+boot.se <- final.boot %>%
+  filter(group_var == "overall") %>%
+  left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+  group_by(boot_rep, outcome) %>%
+  summarize(rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+            .groups = "drop") %>%
+  group_by(outcome) %>%
+  summarize(se = sd(rep_mean, na.rm = TRUE), .groups = "drop") %>%
+  rename(variable = outcome)
 
 pfx.data <- pfx.long %>%
   left_join(boot.se, by="variable") %>%
@@ -149,99 +123,48 @@ pfx.cont.mkt <- list()
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
-  
-    boot.vars <- unlist(
-      lapply(var, function(v) {
-        paste0(v, "_", 1:n_boot)
-      })
-    )
 
     pat.var <- pat.list[i]
     pat.label <- pat.labels[i]
 
-    graph.final <- logit.final %>% 
-      filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1)
+    graph.final <- logit.final %>%
+      filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1) %>%
+      mutate(bin = apply_age_bin(.data[[pat.var]], bin_spec$age$breaks)) %>%
+      filter(!is.na(bin)) %>%
+      mutate(bin = as.character(bin))
 
-    # Compute dynamic bin width and bin ranges
-    min_val <- min(graph.final[[pat.var]], na.rm = TRUE)
-    max_val <- max(graph.final[[pat.var]], na.rm = TRUE)
-    bin_width <- (max_val - min_val) / 5  # 5 bins
-    bin_breaks <- seq(min_val, max_val, by = bin_width)
-
-
-    # Compute effects by bins for the current continuous variable
-    graph.final <- graph.final %>%
-      mutate(bin = cut(.data[[pat.var]], 
-                 breaks = bin_breaks, 
-                 include.lowest = TRUE)) %>%
-      filter(!is.na(bin))
-
+    # Main estimate: weighted mean per bin
     effects <- graph.final %>%
       left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
       group_by(bin) %>%
       summarize(
-        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)) %>%
-      ungroup()
+        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE),
+        .groups = "drop")
 
-    boot.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
+    # Bootstrap SE per bin (cross-market weighted within rep, then sd across reps)
+    boot.se <- final.boot %>%
+      filter(group_var == "age", outcome == var) %>%
+      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+      group_by(boot_rep, bin) %>%
+      summarize(rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+                .groups = "drop") %>%
       group_by(bin) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
+      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop")
 
-    boot.long <- boot.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot.se <- boot.long %>%
-      group_by(bin) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))
-      
-    effects <- effects %>% 
+    effects <- effects %>%
       left_join(boot.se, by="bin") %>%
       mutate(l_95=mean-1.96*sd,
              u_95=mean+1.96*sd)
-  
-    # Compute market-level effects by bin
+
+    # Market-level estimates per bin
     effects_mkt <- graph.final %>%
       group_by(bin, mkt) %>%
-      summarize(
-        mean = mean(.data[[var]], na.rm = TRUE)
-      ) %>%
-      ungroup()
+      summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
 
-    boot_mkt.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+    boot_mkt.se <- final.boot %>%
+      filter(group_var == "age", outcome == var) %>%
       group_by(bin, mkt) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ mean(.x, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
-
-    boot_mkt.long <- boot_mkt.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot_mkt.se <- boot_mkt.long %>%
-      group_by(bin, mkt) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))      
+      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop")
 
     effects_mkt <- effects_mkt %>%
       left_join(boot_mkt.se, by=c("bin","mkt")) %>%
@@ -284,105 +207,65 @@ pfx.qntl.mkt <- list()
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
-  
-    boot.vars <- unlist(
-      lapply(var, function(v) {
-        paste0(v, "_", 1:n_boot)
-      })
-    )
 
     pat.var <- pat.list[i]
     pat.label <- pat.labels[i]
 
-  graph.final <- logit.final %>%
-    filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1) %>%
-    group_by(mkt) %>%
-    mutate(
-      bin = case_when(
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.1, na.rm = TRUE) ~ "10",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.25, na.rm = TRUE) ~ "25",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.5, na.rm = TRUE) ~ "50",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.75, na.rm = TRUE) ~ "75",
-        .data[[pat.var]] <= quantile(.data[[pat.var]], 0.90, na.rm = TRUE) ~ "90",
-        TRUE ~ "100"
-      )
-    ) %>%
-    ungroup() %>%
-    filter(!is.na(bin)) %>%
-    mutate(bin = factor(bin, levels = c("10", "25", "50", "75", "90","100")))
+    qbreaks_lookup <- bin_spec[[pat.var]]$qbreaks_by_mkt
 
-    # Compute effects by bins for the current continuous variable
+    graph.final <- logit.final %>%
+      filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1) %>%
+      left_join(qbreaks_lookup, by = "mkt") %>%
+      mutate(bin = case_when(
+        .data[[pat.var]] <= q10 ~ "10",
+        .data[[pat.var]] <= q25 ~ "25",
+        .data[[pat.var]] <= q50 ~ "50",
+        .data[[pat.var]] <= q75 ~ "75",
+        .data[[pat.var]] <= q90 ~ "90",
+        TRUE ~ "100"
+      )) %>%
+      filter(!is.na(bin)) %>%
+      select(-q10, -q25, -q50, -q75, -q90)
+
+    bin_lvls <- c("10","25","50","75","90","100")
+
     effects <- graph.final %>%
       left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
       group_by(bin) %>%
-      summarize(
-        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)) %>%
-      ungroup()
+      summarize(mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE),
+                .groups = "drop")
 
-    boot.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
+    boot.se <- final.boot %>%
+      filter(group_var == pat.var, outcome == var) %>%
+      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+      group_by(boot_rep, bin) %>%
+      summarize(rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+                .groups = "drop") %>%
       group_by(bin) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
+      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop")
 
-    boot.long <- boot.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot.se <- boot.long %>%
-      group_by(bin) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))
-      
-    effects <- effects %>% 
+    effects <- effects %>%
       left_join(boot.se, by="bin") %>%
       mutate(l_95=mean-1.96*sd,
-             u_95=mean+1.96*sd)
-  
-    # Compute market-level effects by bin
+             u_95=mean+1.96*sd,
+             bin = factor(bin, levels = bin_lvls)) %>%
+      arrange(bin)
+
     effects_mkt <- graph.final %>%
       group_by(bin, mkt) %>%
-      summarize(
-        mean = mean(.data[[var]], na.rm = TRUE)
-      ) %>%
-      ungroup()
+      summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
 
-    boot_mkt.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
+    boot_mkt.se <- final.boot %>%
+      filter(group_var == pat.var, outcome == var) %>%
       group_by(bin, mkt) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ mean(.x, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
-
-    boot_mkt.long <- boot_mkt.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot_mkt.se <- boot_mkt.long %>%
-      group_by(bin, mkt) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))      
+      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop")
 
     effects_mkt <- effects_mkt %>%
       left_join(boot_mkt.se, by=c("bin","mkt")) %>%
       mutate(l_95=mean-1.96*sd,
-             u_95=mean+1.96*sd)
+             u_95=mean+1.96*sd,
+             bin = factor(bin, levels = bin_lvls)) %>%
+      arrange(bin, mkt)
 
     # Calculate y-axis limits
     y_max <- max(effects_mkt$u_95, na.rm = TRUE)
@@ -423,20 +306,13 @@ pfx.bin.mkt <- list()
 
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
-    
+
     pat.var <- pat.list[i]
     pat.label <- pat.labels[i]
 
-    boot.vars <- unlist(
-      lapply(var, function(v) {
-        paste0(v, "_", 1:n_boot)
-      })
-    )
-
     graph.final <- logit.final %>%
       filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1)
-  
-    # Compute overall weighted effects by binary variable
+
     if (pat.var=="nhblack") {
       temp <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
@@ -445,118 +321,65 @@ for (var in hist.list) {
     } else {
       temp <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-        group_by(.data[[pat.var]]) 
+        group_by(.data[[pat.var]])
     }
 
     if (mkt.path == "atl-only") {
       effects <- temp %>%
-        summarize(mean = mean(.data[[var]], na.rm = TRUE)) %>%
-        ungroup()
+        summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
     } else {
       effects <- temp %>%
-        summarize(mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE)) %>%
-        ungroup()
+        summarize(mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE),
+                  .groups = "drop")
     }
 
-    if (mkt.path=="atl-only") {
-      boot.wide <- graph.final %>%
-        left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-        left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
-        group_by(.data[[pat.var]]) %>%
-        summarize(
-          across(
-            all_of(boot.vars),
-            list(
-                boot_mean = ~ mean(.x, na.rm = TRUE)
-            ),
-            .names = "{.col}_mean"
-          ))
-    } else {
-      boot.wide <- graph.final %>%
-        left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-        left_join(market.stats2 %>% select(mkt, n_deliveries), by="mkt") %>%
-        group_by(.data[[pat.var]]) %>%
-        summarize(
-          across(
-            all_of(boot.vars),
-            list(
-                boot_mean = ~ weighted.mean(.x, w = n_deliveries, na.rm = TRUE)
-            ),
-            .names = "{.col}_mean"
-          ))
-    }
-
-    boot.long <- boot.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot.se <- boot.long %>%
-      group_by(.data[[pat.var]]) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))
-
-    boot.diff <- boot.long %>%
-      group_by(bootstrap) %>%
+    # Bootstrap SE per group (rep means → sd across reps)
+    rep_means <- final.boot %>%
+      filter(group_var == pat.var, outcome == var) %>%
+      mutate(grp = as.integer(bin)) %>%
+      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
+      group_by(boot_rep, grp) %>%
       summarize(
-        diff = .data[[var]][.data[[pat.var]] == 1] - 
-              .data[[var]][.data[[pat.var]] == 0],
-        .groups = "drop"
-      )
+        rep_mean = if (mkt.path == "atl-only") mean(mean, na.rm = TRUE)
+                   else weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+        .groups = "drop")
 
-    boot.diff.se <- boot.diff %>%
+    boot.se <- rep_means %>%
+      group_by(grp) %>%
+      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop") %>%
+      rename(!!pat.var := grp)
+
+    boot.diff.se <- rep_means %>%
+      group_by(boot_rep) %>%
+      summarize(diff = rep_mean[grp == 1] - rep_mean[grp == 0], .groups = "drop") %>%
       summarize(diff_sd = sd(diff, na.rm = TRUE))
 
-    effects <- effects %>% 
-      left_join(boot.se, by=pat.var) %>%
+    effects <- effects %>%
+      left_join(boot.se, by = pat.var) %>%
       bind_cols(boot.diff.se) %>%
       mutate(l_95=mean-1.96*sd,
              u_95=mean+1.96*sd)
 
-
-    # Compute market-level effects by binary variable
+    # Market-level effects by binary variable
     if (pat.var=="nhblack") {
       effects_mkt <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         filter(nhwhite==1 | nhblack==1) %>%
         group_by(.data[[pat.var]], mkt) %>%
-        summarize(
-          mean = mean(.data[[var]], na.rm = TRUE)
-        ) %>%
-        ungroup()
+        summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
     } else {
       effects_mkt <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         group_by(.data[[pat.var]], mkt) %>%
-        summarize(
-          mean = mean(.data[[var]], na.rm = TRUE)
-        ) %>%
-        ungroup()
+        summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
     }
 
-    boot_mkt.wide <- graph.final %>%
-      left_join(final.boot, by=c("id","year","patid","facility","mkt")) %>%
-      group_by(.data[[pat.var]], mkt) %>%
-      summarize(
-        across(
-          all_of(boot.vars),
-          list(
-            boot_mean = ~ mean(.x, na.rm = TRUE)
-          ),
-          .names = "{.col}_mean"
-        ))
-
-    boot_mkt.long <- boot_mkt.wide %>%
-      pivot_longer(
-        cols = matches("_[0-9]+_mean$"),
-        names_to = c(".value", "bootstrap"),
-        names_pattern = "(.*)_([0-9]+)_mean$"
-      )
-
-    boot_mkt.se <- boot_mkt.long %>%
-      group_by(.data[[pat.var]], mkt) %>%
-      summarize(sd = sd(.data[[var]], na.rm = TRUE))      
+    boot_mkt.se <- final.boot %>%
+      filter(group_var == pat.var, outcome == var) %>%
+      mutate(grp = as.integer(bin)) %>%
+      group_by(grp, mkt) %>%
+      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop") %>%
+      rename(!!pat.var := grp)
 
     effects_mkt <- effects_mkt %>%
       left_join(boot_mkt.se, by=c(pat.var,"mkt")) %>%
@@ -625,7 +448,7 @@ summary_means1 <- purrr::map_dfr(
 
 
 # Choose the bin you want
-target_bin <- 50
+target_bin <- "50"
 summary_means2 <- map_dfr(
   .x = names(pfx.qntl),
   .f = function(nm) {
@@ -675,7 +498,7 @@ summary_means <- bind_rows(summary_means1, summary_means2, summary_means3) %>%
     "Leonard Obstetric Comorbidity Score",
     "Ob/Gyns per 10,000 WRA in County",
     "Medicaid vs Private Insured",
-    "Non-Hispanic White vs Non-Hispanic Black",
+    "Non-Hispanic Black vs Non-Hispanic White",
     "Hispanic vs Non-Hispanic"
   )) %>%
   mutate(

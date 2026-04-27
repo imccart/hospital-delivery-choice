@@ -6,6 +6,12 @@
 
 
 # Preliminaries -----------------------------------------------------------
+
+  data.table::setDTthreads(1)
+  Sys.setenv(OMP_NUM_THREADS = "1",
+             OPENBLAS_NUM_THREADS = "1",
+             MKL_NUM_THREADS = "1")
+             
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, data.table, ggplot2, haven, janitor, mclogit, broom, modelr, fixest,
                 modelsummary, prediction, effects, marginaleffects, purrr, kableExtra, scales, estimatr, flextable, officer)
@@ -84,7 +90,7 @@ source("analysis/1_descriptive_stats.R")
 # Estimate Choice Model ------------------------------------------------
 
 ## Parameters for estimation
-n_boot=500
+n_boot=5
 mkt.path="atl-only"
 markets <- c(9)
 target_bin_label <- "(28.6,37.4]"   # for future summary of mean effects, need to select proper bin
@@ -101,6 +107,36 @@ var1 <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
 var2 <- c("ci_scorent","age","nhwhite","nhblack","hispanic","mcaid_unins","obgyn_10kwra")
 pfx.vars <- c("diff_dist","perilevel_plus", "any_teach", "c_section_elect")
 pfx.inc <- c(1,1,1,0.01)
+
+## Pre-compute bin specs (used by bootstrap + figure binning so they match)
+chosen.dat <- choice.reg %>% filter(choice == TRUE, mkt %in% markets)
+
+bin_spec <- list(
+  age = list(
+    breaks = seq(min(chosen.dat$age, na.rm = TRUE),
+                 max(chosen.dat$age, na.rm = TRUE), length.out = 6)
+  ),
+  ci_scorent = list(
+    qbreaks_by_mkt = chosen.dat %>%
+      group_by(mkt) %>%
+      summarize(q10 = quantile(ci_scorent, 0.10, na.rm = TRUE),
+                q25 = quantile(ci_scorent, 0.25, na.rm = TRUE),
+                q50 = quantile(ci_scorent, 0.50, na.rm = TRUE),
+                q75 = quantile(ci_scorent, 0.75, na.rm = TRUE),
+                q90 = quantile(ci_scorent, 0.90, na.rm = TRUE),
+                .groups = "drop")
+  ),
+  obgyn_10kwra = list(
+    qbreaks_by_mkt = chosen.dat %>%
+      group_by(mkt) %>%
+      summarize(q10 = quantile(obgyn_10kwra, 0.10, na.rm = TRUE),
+                q25 = quantile(obgyn_10kwra, 0.25, na.rm = TRUE),
+                q50 = quantile(obgyn_10kwra, 0.50, na.rm = TRUE),
+                q75 = quantile(obgyn_10kwra, 0.75, na.rm = TRUE),
+                q90 = quantile(obgyn_10kwra, 0.90, na.rm = TRUE),
+                .groups = "drop")
+  )
+)
 
 source("analysis/2_estimation.R")
 
