@@ -10,13 +10,15 @@ apply_age_bin <- function(x, breaks) {
   cut(x, breaks = breaks, include.lowest = TRUE)
 }
 
-apply_qntl_bin <- function(x, qb) {
+apply_qntl_bin <- function(x, q10, q25, q50, q75, q90) {
+  q10 <- unname(q10); q25 <- unname(q25); q50 <- unname(q50)
+  q75 <- unname(q75); q90 <- unname(q90)
   out <- case_when(
-    x <= qb["q10"] ~ "10",
-    x <= qb["q25"] ~ "25",
-    x <= qb["q50"] ~ "50",
-    x <= qb["q75"] ~ "75",
-    x <= qb["q90"] ~ "90",
+    x <= q10 ~ "10",
+    x <= q25 ~ "25",
+    x <= q50 ~ "50",
+    x <= q75 ~ "75",
+    x <= q90 ~ "90",
     TRUE ~ "100"
   )
   factor(out, levels = c("10","25","50","75","90","100"))
@@ -25,9 +27,7 @@ apply_qntl_bin <- function(x, qb) {
 summarize_boot_rep <- function(per_rep, bin_spec, b, market_id) {
   hist.list <- c("ch_dist","ch_peri","ch_teach","ch_csection")
   qb_ci <- bin_spec$ci_scorent$qbreaks_by_mkt %>% filter(mkt == market_id)
-  qb_ci <- c(q10=qb_ci$q10, q25=qb_ci$q25, q50=qb_ci$q50, q75=qb_ci$q75, q90=qb_ci$q90)
   qb_ob <- bin_spec$obgyn_10kwra$qbreaks_by_mkt %>% filter(mkt == market_id)
-  qb_ob <- c(q10=qb_ob$q10, q25=qb_ob$q25, q50=qb_ob$q50, q75=qb_ob$q75, q90=qb_ob$q90)
 
   out <- list()
   for (var in hist.list) {
@@ -39,11 +39,13 @@ summarize_boot_rep <- function(per_rep, bin_spec, b, market_id) {
       filter(!is.na(bin)) %>% group_by(bin) %>%
       summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
       mutate(group_var="age")
-    ci       <- rep %>% mutate(bin = as.character(apply_qntl_bin(ci_scorent, qb_ci))) %>%
+    ci       <- rep %>% mutate(bin = as.character(apply_qntl_bin(ci_scorent,
+                                qb_ci$q10, qb_ci$q25, qb_ci$q50, qb_ci$q75, qb_ci$q90))) %>%
       filter(!is.na(bin)) %>% group_by(bin) %>%
       summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
       mutate(group_var="ci_scorent")
-    ob       <- rep %>% mutate(bin = as.character(apply_qntl_bin(obgyn_10kwra, qb_ob))) %>%
+    ob       <- rep %>% mutate(bin = as.character(apply_qntl_bin(obgyn_10kwra,
+                                qb_ob$q10, qb_ob$q25, qb_ob$q50, qb_ob$q75, qb_ob$q90))) %>%
       filter(!is.na(bin)) %>% group_by(bin) %>%
       summarize(mean = mean(.data[[var]], na.rm=TRUE), .groups="drop") %>%
       mutate(group_var="obgyn_10kwra")
