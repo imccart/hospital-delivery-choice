@@ -22,6 +22,8 @@ source("analysis/functions.R")
 source("data-code/functions.R")
 
 # ---- Knobs you might tweak ---------------------------------------------------
+# NOTE: mkt values are walktrap output. If 1_community_detection.R is re-run,
+# the IDs may change; see ReadMe.md "Walktrap markets and regeneration".
 mkt.path         <- "excluding-atl"   # "atl-only" or "excluding-atl"
 markets          <- c(2:8,10,11)      # c(9) for Atlanta; for excluding-atl use c(2:8,10,11)
 n_target         <- 150          # total reps to accumulate

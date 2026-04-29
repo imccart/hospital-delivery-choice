@@ -92,6 +92,8 @@ source("analysis/1_descriptive_stats.R")
 # Estimate Choice Model ------------------------------------------------
 
 ## Parameters for estimation
+## NOTE: mkt values below are walktrap output. If 1_community_detection.R is re-run,
+## the IDs may change; see ReadMe.md "Walktrap markets and regeneration" for recovery.
 n_boot=150
 ##mkt.path="atl-only"
 ##markets <- c(9)

@@ -85,7 +85,12 @@ ggplot(data = tract.dat) +
 
 # Form markets ------------------------------------------------------------
 
-## source("data-code/1_community_detection.R")
+## Run 1_community_detection.R first if hospital_markets.rds doesn't exist;
+## it produces walktrap cluster IDs whose numeric labels are non-deterministic
+## across runs. After regenerating, every downstream pipeline (this file,
+## 3_choice_data.R, _analysis.R, run_boot_summary.R, 4_hsr_figures.r) needs
+## to be re-run so all `mkt` references stay consistent.
+source("data-code/1_community_detection.R")
 walktrap.dat <- read_rds("data/output/hospital_markets.rds")
 
 # Final delivery data ------------------------------------------------------

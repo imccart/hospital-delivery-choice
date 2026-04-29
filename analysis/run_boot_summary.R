@@ -12,6 +12,8 @@
 # or interactively after setting the config block below.
 
 # ---- Config (toggle for the market you just finished) ------------------------
+# NOTE: mkt values are walktrap output. If 1_community_detection.R is re-run,
+# the IDs may change; see ReadMe.md "Walktrap markets and regeneration".
 ##mkt.path         <- "atl-only"
 ##markets          <- c(9)
 ##target_bin_label <- "(28.6,37.4]"

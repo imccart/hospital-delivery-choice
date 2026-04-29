@@ -8,7 +8,7 @@
 #   results/tables/atl-only/pfx_*.csv         (from 3_results_summary.R, Atlanta)
 #   results/tables/excluding-atl/pfx_*.csv    (from 3_results_summary.R, outside ATL)
 #   data/input/shapefiles/tl_2020_13_tract10.shp
-#   data/output/hospital_markets.rds
+#   data/output/delivery_data.rds              (tract→market mapping derived inline)
 #   results/tables/market_detail.csv
 
 library(tidyverse)
