@@ -22,10 +22,10 @@ source("analysis/functions.R")
 source("data-code/functions.R")
 
 # ---- Knobs you might tweak ---------------------------------------------------
-mkt.path         <- "atl-only"   # or "excluding-atl"
-markets          <- c(9)         # market 9 = Atlanta; for excluding-atl use c(2:8,10,11)
-n_target         <- 200          # total reps to accumulate
-reps_per_session <- 3L           # exit after this many reps (1 = max isolation,
+mkt.path         <- "excluding-atl"   # "atl-only" or "excluding-atl"
+markets          <- c(2:8,10,11)      # c(9) for Atlanta; for excluding-atl use c(2:8,10,11)
+n_target         <- 150          # total reps to accumulate
+reps_per_session <- 25L          # exit after this many reps (1 = max isolation,
                                  # higher = lower data-load overhead per rep)
 
 var1      <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
@@ -34,18 +34,27 @@ pfx.vars  <- var1
 pfx.inc   <- c(1,1,1,0.01)
 # ------------------------------------------------------------------------------
 
-out_dir <- file.path("results/tables", mkt.path, "boot_reps")
-dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+# Per-market output dirs and missing-rep lists
+out_dirs <- setNames(
+  file.path("results/tables", mkt.path, "boot_reps", paste0("mkt_", markets)),
+  as.character(markets)
+)
+for (d in out_dirs) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 
-# Quick check: any reps still missing? Avoid loading data if everything is done.
-existing <- list.files(out_dir, pattern = "^rep_.*\\.csv$")
-done_ids <- as.integer(sub("rep_(\\d+)\\.csv$", "\\1", existing))
-missing  <- setdiff(seq_len(n_target), done_ids)
-if (length(missing) == 0) {
-  cat("All", n_target, "reps already saved in", out_dir, "\n")
+missing_by_market <- lapply(markets, function(m) {
+  d <- out_dirs[[as.character(m)]]
+  existing <- list.files(d, pattern = "^rep_.*\\.csv$")
+  done_ids <- as.integer(sub("rep_(\\d+)\\.csv$", "\\1", existing))
+  setdiff(seq_len(n_target), done_ids)
+})
+names(missing_by_market) <- as.character(markets)
+
+total_missing <- sum(lengths(missing_by_market))
+if (total_missing == 0) {
+  cat("All", n_target, "reps already saved for all markets.\n")
   quit(save = "no")
 }
-cat("Need", length(missing), "more reps;", length(done_ids), "already saved.\n")
+cat("Need", total_missing, "more reps across", length(markets), "markets.\n")
 
 # ---- Build choice.reg --------------------------------------------------------
 cat("[", format(Sys.time(), "%H:%M:%S"), "] loading data\n", sep = "")
@@ -131,8 +140,7 @@ rm(chosen.dat); gc(verbose = FALSE)
 # hard segfault (no buffered lines lost). When the next run starts, the tail
 # of debug.log shows the last successful checkpoint before the crash.
 
-log_path <- file.path(out_dir, "debug.log")
-log_step <- function(rep_id, step) {
+log_step <- function(rep_id, step, log_path) {
   mem_mb <- round(sum(gc(verbose = FALSE)[, 2]), 1)   # R-side resident MB
   msg <- sprintf("[%s] rep=%4d  mem=%6.1fMB  %s\n",
                  format(Sys.time(), "%H:%M:%S"), rep_id, mem_mb, step)
@@ -140,71 +148,82 @@ log_step <- function(rep_id, step) {
   cat(msg, file = log_path, append = TRUE)
 }
 
-market <- markets[1]   # this runner is single-market
-log_step(0, paste("=== runner start, market =", market,
-                  ", reps_per_session =", reps_per_session, "==="))
-
 reps_done_this_session <- 0L
 
-for (b in missing) {
-  out_path <- file.path(out_dir, sprintf("rep_%04d.csv", b))
-  if (file.exists(out_path)) next
+for (market in markets) {
+  missing  <- missing_by_market[[as.character(market)]]
+  if (length(missing) == 0) next
 
-  t0 <- Sys.time()
-  set.seed(b)
-  log_step(b, "rep start")
+  out_dir  <- out_dirs[[as.character(market)]]
+  log_path <- file.path(out_dir, "debug.log")
 
-  log_step(b, "filter market_data")
-  market_data <- choice.reg %>% filter(mkt == market)
+  log_step(0, paste("=== runner start, market =", market,
+                    ", reps_per_session =", reps_per_session, "==="), log_path)
 
-  log_step(b, "sample ids")
-  sampled_ids <- sample(unique(market_data$id),
-                        size = length(unique(market_data$id)), replace = TRUE)
-  boot_ids <- tibble(sampled_id = sampled_ids, boot_id = seq_along(sampled_ids))
+  for (b in missing) {
+    out_path <- file.path(out_dir, sprintf("rep_%04d.csv", b))
+    if (file.exists(out_path)) next
 
-  log_step(b, "left_join (many-to-many)")
-  resampled_data <- boot_ids %>%
-    left_join(market_data, by = c("sampled_id" = "id"),
-              relationship = "many-to-many") %>%
-    mutate(id = boot_id) %>%
-    select(-sampled_id)
+    t0 <- Sys.time()
+    set.seed(b)
+    log_step(b, "rep start", log_path)
 
-  log_step(b, "estimate_choice_model: start")
-  boot_model <- estimate_choice_model(market, var1, var2, pfx.vars, pfx.inc,
-                                      resampled_data)
-  log_step(b, "estimate_choice_model: done")
+    log_step(b, "filter market_data", log_path)
+    market_data <- choice.reg %>% filter(mkt == market)
 
-  log_step(b, "compute per_rep + ch_*")
-  per_rep <- boot_model$predictions %>%
-    left_join(resampled_data %>%
-                select(id, patid, facility, year, mkt, date_delivery,
-                       age, ci_scorent, obgyn_10kwra,
-                       nhblack, nhwhite, mcaid_unins, hispanic),
-              by = c("id","patid","facility","year","mkt","date_delivery")) %>%
-    filter(choice == 1) %>%
-    mutate(ch_dist     = pred_diff_dist1       - pred_prob,
-           ch_peri     = pred_perilevel_plus1  - pred_perilevel_plus0,
-           ch_teach    = pred_any_teach1       - pred_any_teach0,
-           ch_csection = pred_c_section_elect1 - pred_prob)
+    log_step(b, "sample ids", log_path)
+    sampled_ids <- sample(unique(market_data$id),
+                          size = length(unique(market_data$id)), replace = TRUE)
+    boot_ids <- tibble(sampled_id = sampled_ids, boot_id = seq_along(sampled_ids))
 
-  log_step(b, "summarize_boot_rep")
-  one <- summarize_boot_rep(per_rep, bin_spec, b, market)
-  one$boot_rep <- b
+    log_step(b, "left_join (many-to-many)", log_path)
+    resampled_data <- boot_ids %>%
+      left_join(market_data, by = c("sampled_id" = "id"),
+                relationship = "many-to-many") %>%
+      mutate(id = boot_id) %>%
+      select(-sampled_id)
 
-  log_step(b, "fwrite csv")
-  fwrite(one, out_path)
+    log_step(b, "estimate_choice_model: start", log_path)
+    boot_model <- estimate_choice_model(market, var1, var2, pfx.vars, pfx.inc,
+                                        resampled_data)
+    log_step(b, "estimate_choice_model: done", log_path)
 
-  log_step(b, sprintf("rep done in %.1fs", as.numeric(Sys.time() - t0, units = "secs")))
+    log_step(b, "compute per_rep + ch_*", log_path)
+    per_rep <- boot_model$predictions %>%
+      left_join(resampled_data %>%
+                  select(id, patid, facility, year, mkt, date_delivery,
+                         age, ci_scorent, obgyn_10kwra,
+                         nhblack, nhwhite, mcaid_unins, hispanic),
+                by = c("id","patid","facility","year","mkt","date_delivery")) %>%
+      filter(choice == 1) %>%
+      mutate(ch_dist     = pred_diff_dist1       - pred_prob,
+             ch_peri     = pred_perilevel_plus1  - pred_perilevel_plus0,
+             ch_teach    = pred_any_teach1       - pred_any_teach0,
+             ch_csection = pred_c_section_elect1 - pred_prob)
 
-  rm(per_rep, boot_model, resampled_data, market_data, boot_ids, sampled_ids, one)
-  gc(verbose = FALSE)
+    log_step(b, "free big intermediates", log_path)
+    rm(boot_model, resampled_data, market_data, boot_ids, sampled_ids)
+    gc(verbose = FALSE)
 
-  reps_done_this_session <- reps_done_this_session + 1L
-  if (reps_done_this_session >= reps_per_session) {
-    log_step(0, sprintf("=== session quota of %d reps reached, exiting ===",
-                        reps_per_session))
-    quit(save = "no")
+    log_step(b, "summarize_boot_rep", log_path)
+    one <- summarize_boot_rep(per_rep, bin_spec, b, market)
+    one$boot_rep <- b
+
+    log_step(b, "fwrite csv", log_path)
+    fwrite(one, out_path)
+
+    log_step(b, sprintf("rep done in %.1fs", as.numeric(Sys.time() - t0, units = "secs")), log_path)
+
+    rm(per_rep, one)
+    gc(verbose = FALSE)
+
+    reps_done_this_session <- reps_done_this_session + 1L
+    if (reps_done_this_session >= reps_per_session) {
+      log_step(0, sprintf("=== session quota of %d reps reached, exiting ===",
+                          reps_per_session), log_path)
+      quit(save = "no")
+    }
   }
 }
 
-log_step(0, "=== all reps complete ===")
+cat("=== all reps complete across all markets ===\n")

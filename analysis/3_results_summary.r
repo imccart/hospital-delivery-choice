@@ -114,89 +114,72 @@ pfx.data <- pfx.long %>%
 
 # Partial Effects by Patient Characteristics ----------------------------
 
-# Loop through each variable in hist.list and pat.list (continuous variables only)
-pat.list <- c("age")
-pat.labels <- c("Age")
+# Partial effects by age (continuous)
 pfx.cont <- list()
 pfx.cont.mkt <- list()
-
+age_levels <- levels(cut(logit.final$age, bin_spec$age$breaks, include.lowest = TRUE))
 
 for (var in hist.list) {
-  for (i in seq_along(pat.list)) {
 
-    pat.var <- pat.list[i]
-    pat.label <- pat.labels[i]
+  graph.final <- logit.final %>%
+    filter(!is.na(.data[[var]]), abs(.data[[var]]) < 1) %>%
+    mutate(bin = as.character(cut(age, bin_spec$age$breaks, include.lowest = TRUE))) %>%
+    filter(!is.na(bin))
 
-    graph.final <- logit.final %>%
-      filter(!is.na(.data[[var]]), .data[[var]] < 1, .data[[var]] > -1) %>%
-      mutate(bin = apply_age_bin(.data[[pat.var]], bin_spec$age$breaks)) %>%
-      filter(!is.na(bin)) %>%
-      mutate(bin = as.character(bin))
+  effects <- graph.final %>%
+    left_join(market.stats2, by = "mkt") %>%
+    group_by(bin) %>%
+    summarize(mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE),
+              .groups = "drop")
 
-    # Main estimate: weighted mean per bin
-    effects <- graph.final %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-      group_by(bin) %>%
-      summarize(
-        mean = weighted.mean(.data[[var]], w = n_deliveries, na.rm = TRUE),
-        .groups = "drop")
+  boot.se <- final.boot %>%
+    filter(group_var == "age", outcome == var) %>%
+    left_join(market.stats2, by = "mkt") %>%
+    group_by(boot_rep, bin) %>%
+    summarize(rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+              .groups = "drop") %>%
+    group_by(bin) %>%
+    summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop")
 
-    # Bootstrap SE per bin (cross-market weighted within rep, then sd across reps)
-    boot.se <- final.boot %>%
-      filter(group_var == "age", outcome == var) %>%
-      left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-      group_by(boot_rep, bin) %>%
-      summarize(rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
-                .groups = "drop") %>%
-      group_by(bin) %>%
-      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop")
+  effects <- effects %>%
+    left_join(boot.se, by = "bin") %>%
+    mutate(l_95 = mean - 1.96 * sd, u_95 = mean + 1.96 * sd)
 
-    effects <- effects %>%
-      left_join(boot.se, by="bin") %>%
-      mutate(l_95=mean-1.96*sd,
-             u_95=mean+1.96*sd)
+  effects_mkt <- graph.final %>%
+    group_by(bin, mkt) %>%
+    summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
 
-    # Market-level estimates per bin
-    effects_mkt <- graph.final %>%
-      group_by(bin, mkt) %>%
-      summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
+  boot_mkt.se <- final.boot %>%
+    filter(group_var == "age", outcome == var) %>%
+    group_by(bin, mkt) %>%
+    summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop")
 
-    boot_mkt.se <- final.boot %>%
-      filter(group_var == "age", outcome == var) %>%
-      group_by(bin, mkt) %>%
-      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop")
+  effects_mkt <- effects_mkt %>%
+    left_join(boot_mkt.se, by = c("bin", "mkt")) %>%
+    mutate(l_95 = mean - 1.96 * sd, u_95 = mean + 1.96 * sd)
 
-    effects_mkt <- effects_mkt %>%
-      left_join(boot_mkt.se, by=c("bin","mkt")) %>%
-      mutate(l_95=mean-1.96*sd,
-             u_95=mean+1.96*sd)
+  effects     <- effects     %>% mutate(bin = factor(bin, levels = age_levels))
+  effects_mkt <- effects_mkt %>% mutate(bin = factor(bin, levels = age_levels))
 
-    # Calculate y-axis limits
-    y_max <- max(effects_mkt$u_95, na.rm = TRUE)
-    y_min <- min(effects_mkt$l_95, na.rm = TRUE)
+  y_max <- max(effects_mkt$u_95, na.rm = TRUE)
+  y_min <- min(effects_mkt$l_95, na.rm = TRUE)
 
+  plot <- ggplot() +
+    geom_line(data = effects_mkt, aes(x = bin, y = mean, group = mkt),
+              color = "gray80", linewidth = 0.6) +
+    geom_line(data = effects, aes(x = bin, y = mean, group = 1), color = "black") +
+    geom_errorbar(data = effects, aes(x = bin, ymin = l_95, ymax = u_95),
+                  width = 0.2, color = "gray40") +
+    geom_point(data = effects, aes(x = bin, y = mean), size = 2, color = "black") +
+    labs(x = "Bin of Age", y = "Mean Change in Predicted Probability") +
+    coord_cartesian(ylim = c(y_min, y_max)) +
+    theme_bw()
 
-    # Generate the plot
-    plot <- ggplot() +
-      geom_line(data = effects_mkt, aes(x = bin, y = mean, group = mkt), 
-                color = "gray80", linewidth = 0.6) +
-      geom_line(data = effects, aes(x = bin, y = mean, group = 1), color = "black") +
-      geom_errorbar(data = effects, aes(x = bin, ymin = l_95, ymax = u_95), 
-                    width = 0.2, color = "gray40") +
-      geom_point(data = effects, aes(x = bin, y = mean), size = 2, color = "black") +
-      labs(x = paste0("Bin of ", pat.label), y = "Mean Change in Predicted Probability") +
-      coord_cartesian(ylim = c(y_min, y_max)) +
-      theme_bw()
+  ggsave(filename = paste0("results/figures/", mkt.path, "/", var, "_age.png"),
+         plot = plot, width = 8, height = 6, dpi = 300)
 
-    # Save the plot
-    ggsave(
-      filename = paste0("results/figures/", mkt.path, "/", var, "_", pat.var, ".png"),
-      plot = plot, width = 8, height = 6, dpi = 300
-    )
-    
-    pfx.cont[[paste0(var, "_", pat.var)]] <- effects
-    pfx.cont.mkt[[paste0(var, "_", pat.var)]] <- effects_mkt
-  }
+  pfx.cont[[paste0(var, "_age")]] <- effects
+  pfx.cont.mkt[[paste0(var, "_age")]] <- effects_mkt
 }
 
 # Loop through each variable in hist.list and pat.list (quantiles)
@@ -304,6 +287,10 @@ pat.labels <- c("Black", "Medicaid","Hispanic")
 pfx.bin <- list()
 pfx.bin.mkt <- list()
 
+binary_boot <- final.boot %>%
+  filter(group_var %in% pat.list) %>%
+  mutate(bin = as.integer(bin))
+
 for (var in hist.list) {
   for (i in seq_along(pat.list)) {
 
@@ -317,11 +304,11 @@ for (var in hist.list) {
       temp <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         filter(nhwhite==1 | nhblack==1) %>%
-        group_by(.data[[pat.var]])
+        group_by(bin = .data[[pat.var]])
     } else {
       temp <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-        group_by(.data[[pat.var]])
+        group_by(bin = .data[[pat.var]])
     }
 
     if (mkt.path == "atl-only") {
@@ -334,28 +321,25 @@ for (var in hist.list) {
     }
 
     # Bootstrap SE per group (rep means → sd across reps)
-    rep_means <- final.boot %>%
+    rep_means <- binary_boot %>%
       filter(group_var == pat.var, outcome == var) %>%
-      mutate(grp = as.integer(bin)) %>%
       left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-      group_by(boot_rep, grp) %>%
+      group_by(boot_rep, bin) %>%
       summarize(
-        rep_mean = if (mkt.path == "atl-only") mean(mean, na.rm = TRUE)
-                   else weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
+        rep_mean = weighted.mean(mean, w = n_deliveries, na.rm = TRUE),
         .groups = "drop")
 
     boot.se <- rep_means %>%
-      group_by(grp) %>%
-      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop") %>%
-      rename(!!pat.var := grp)
+      group_by(bin) %>%
+      summarize(sd = sd(rep_mean, na.rm = TRUE), .groups = "drop")
 
     boot.diff.se <- rep_means %>%
       group_by(boot_rep) %>%
-      summarize(diff = rep_mean[grp == 1] - rep_mean[grp == 0], .groups = "drop") %>%
+      summarize(diff = rep_mean[bin == 1] - rep_mean[bin == 0], .groups = "drop") %>%
       summarize(diff_sd = sd(diff, na.rm = TRUE))
 
     effects <- effects %>%
-      left_join(boot.se, by = pat.var) %>%
+      left_join(boot.se, by = "bin") %>%
       bind_cols(boot.diff.se) %>%
       mutate(l_95=mean-1.96*sd,
              u_95=mean+1.96*sd)
@@ -365,24 +349,22 @@ for (var in hist.list) {
       effects_mkt <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
         filter(nhwhite==1 | nhblack==1) %>%
-        group_by(.data[[pat.var]], mkt) %>%
+        group_by(bin = .data[[pat.var]], mkt) %>%
         summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
     } else {
       effects_mkt <- graph.final %>%
         left_join(market.stats2 %>% select(mkt, n_deliveries), by = "mkt") %>%
-        group_by(.data[[pat.var]], mkt) %>%
+        group_by(bin = .data[[pat.var]], mkt) %>%
         summarize(mean = mean(.data[[var]], na.rm = TRUE), .groups = "drop")
     }
 
-    boot_mkt.se <- final.boot %>%
+    boot_mkt.se <- binary_boot %>%
       filter(group_var == pat.var, outcome == var) %>%
-      mutate(grp = as.integer(bin)) %>%
-      group_by(grp, mkt) %>%
-      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop") %>%
-      rename(!!pat.var := grp)
+      group_by(bin, mkt) %>%
+      summarize(sd = sd(mean, na.rm = TRUE), .groups = "drop")
 
     effects_mkt <- effects_mkt %>%
-      left_join(boot_mkt.se, by=c(pat.var,"mkt")) %>%
+      left_join(boot_mkt.se, by = c("bin","mkt")) %>%
       mutate(l_95=mean-1.96*sd,
              u_95=mean+1.96*sd)
 
@@ -394,20 +376,20 @@ for (var in hist.list) {
     # Generate the plot
     plot <- ggplot() +
       # Light, transparent lines connecting gray dots for each market
-      geom_line(data = effects_mkt, 
-                aes(x = as.factor(.data[[pat.var]]), y = mean, group = mkt), 
-                color = "gray90", alpha = 0.5) +    
+      geom_line(data = effects_mkt,
+                aes(x = as.factor(bin), y = mean, group = mkt),
+                color = "gray90", alpha = 0.5) +
       # Gray dots for each market
-      geom_point(data = effects_mkt, 
-                 aes(x = as.factor(.data[[pat.var]]), y = mean, group = mkt), 
+      geom_point(data = effects_mkt,
+                 aes(x = as.factor(bin), y = mean, group = mkt),
                  size = 2, color = "gray80", alpha = 0.7) +
       # Black dot for the weighted average
-      geom_point(data = effects, 
-                 aes(x = as.factor(.data[[pat.var]]), y = mean), 
+      geom_point(data = effects,
+                 aes(x = as.factor(bin), y = mean),
                  size = 3, color = "black") +
       # Error bars for the weighted average
-      geom_linerange(data = effects, 
-                     aes(x = as.factor(.data[[pat.var]]), ymin = l_95, ymax = u_95), 
+      geom_linerange(data = effects,
+                     aes(x = as.factor(bin), ymin = l_95, ymax = u_95),
                      color = "gray40") +
       labs(x = pat.label, y = "Mean Change in Predicted Probability") +
       coord_cartesian(ylim = c(y_min, y_max)) +
@@ -497,8 +479,8 @@ summary_means <- bind_rows(summary_means1, summary_means2, summary_means3) %>%
     "Age",
     "Leonard Obstetric Comorbidity Score",
     "Ob/Gyns per 10,000 WRA in County",
-    "Medicaid vs Private Insured",
     "Non-Hispanic Black vs Non-Hispanic White",
+    "Medicaid vs Private Insured",
     "Hispanic vs Non-Hispanic"
   )) %>%
   mutate(

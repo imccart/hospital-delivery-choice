@@ -7,11 +7,13 @@
 
 # Preliminaries -----------------------------------------------------------
 
-  data.table::setDTthreads(1)
-  Sys.setenv(OMP_NUM_THREADS = "1",
-             OPENBLAS_NUM_THREADS = "1",
-             MKL_NUM_THREADS = "1")
-             
+## single threading to minimize locked binding errors
+data.table::setDTthreads(1)
+Sys.setenv(OMP_NUM_THREADS = "1",
+           OPENBLAS_NUM_THREADS = "1",
+           MKL_NUM_THREADS = "1")
+
+## load packages
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, data.table, ggplot2, haven, janitor, mclogit, broom, modelr, fixest,
                 modelsummary, prediction, effects, marginaleffects, purrr, kableExtra, scales, estimatr, flextable, officer)
@@ -90,13 +92,13 @@ source("analysis/1_descriptive_stats.R")
 # Estimate Choice Model ------------------------------------------------
 
 ## Parameters for estimation
-n_boot=5
-mkt.path="atl-only"
-markets <- c(9)
-target_bin_label <- "(28.6,37.4]"   # for future summary of mean effects, need to select proper bin
+n_boot=150
+##mkt.path="atl-only"
+##markets <- c(9)
+##target_bin_label <- "(28.6,37.4]"   # for future summary of mean effects, need to select proper bin
 
-##mkt.path="excluding-atl"
-##markets <- c(2,3,4,5,6,7,8,10,11)
+mkt.path="excluding-atl"
+markets <- c(2,3,4,5,6,7,8,10,11)
 ##target_bin_label <- "(28.2,36.8]" # for future summary of mean effects, need to select proper bin
 
 
