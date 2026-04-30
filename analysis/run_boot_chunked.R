@@ -24,10 +24,10 @@ source("data-code/functions.R")
 # ---- Knobs you might tweak ---------------------------------------------------
 # NOTE: mkt values are walktrap output. If 1_community_detection.R is re-run,
 # the IDs may change; see ReadMe.md "Walktrap markets and regeneration".
-mkt.path         <- "excluding-atl"   # "atl-only" or "excluding-atl"
-markets          <- c(2:8,10,11)      # c(9) for Atlanta; for excluding-atl use c(2:8,10,11)
+mkt.path         <- "atl-only"   # "atl-only" or "excluding-atl"
+markets          <- c(9)      # c(9) for Atlanta; for excluding-atl use c(2:8,10,11)
 n_target         <- 150          # total reps to accumulate
-reps_per_session <- 25L          # exit after this many reps (1 = max isolation,
+reps_per_session <- 3L          # exit after this many reps (1 = max isolation,
                                  # higher = lower data-load overhead per rep)
 
 var1      <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")

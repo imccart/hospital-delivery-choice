@@ -14,13 +14,13 @@
 # ---- Config (toggle for the market you just finished) ------------------------
 # NOTE: mkt values are walktrap output. If 1_community_detection.R is re-run,
 # the IDs may change; see ReadMe.md "Walktrap markets and regeneration".
-##mkt.path         <- "atl-only"
-##markets          <- c(9)
-##target_bin_label <- "(28.6,37.4]"
+mkt.path         <- "atl-only"
+markets          <- c(9)
+target_bin_label <- "(28.6,37.4]"
 
-mkt.path         <- "excluding-atl"
-markets          <- c(2,3,4,5,6,7,8,10,11)
-target_bin_label <- "(28.2,36.8]"
+##mkt.path         <- "excluding-atl"
+##markets          <- c(2,3,4,5,6,7,8,10,11)
+##target_bin_label <- "(28.2,36.8]"
 
 var1     <- c("diff_dist","perilevel_plus","any_teach","c_section_elect")
 var2     <- c("ci_scorent","age","nhwhite","nhblack","hispanic","mcaid_unins","obgyn_10kwra")

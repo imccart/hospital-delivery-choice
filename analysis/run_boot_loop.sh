@@ -7,7 +7,7 @@
 
 set -u
 
-MKT_PATH="excluding-atl"        # "atl-only" or "excluding-atl"
+MKT_PATH="atl-only"        # "atl-only" or "excluding-atl"
 N_TARGET=150
 BOOT_DIR="results/tables/${MKT_PATH}/boot_reps"
 DONE_FILE="${BOOT_DIR}/rep_$(printf '%04d' "$N_TARGET").csv"
