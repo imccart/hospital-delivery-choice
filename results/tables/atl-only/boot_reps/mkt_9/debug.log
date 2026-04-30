@@ -587,3 +587,293 @@
 [20:55:59] rep=  47  mem=6236.2MB  fwrite csv
 [20:55:59] rep=  47  mem=6236.2MB  rep done in 416.5s
 [20:55:59] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[22:43:43] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[22:43:43] rep=  48  mem=6087.8MB  rep start
+[22:43:43] rep=  48  mem=6087.8MB  filter market_data
+[22:43:45] rep=  48  mem=11199.9MB  sample ids
+[22:43:45] rep=  48  mem=11201.5MB  left_join (many-to-many)
+[22:43:48] rep=  48  mem=16313.8MB  estimate_choice_model: start
+[22:50:17] rep=  48  mem=25555.2MB  estimate_choice_model: done
+[22:50:17] rep=  48  mem=25555.2MB  compute per_rep + ch_*
+[22:50:23] rep=  48  mem=25638.7MB  free big intermediates
+[22:50:25] rep=  48  mem=6235.8MB  summarize_boot_rep
+[22:50:28] rep=  48  mem=6236.1MB  fwrite csv
+[22:50:28] rep=  48  mem=6236.1MB  rep done in 405.1s
+[22:50:28] rep=  49  mem=6152.8MB  rep start
+[22:50:28] rep=  49  mem=6152.8MB  filter market_data
+[22:50:31] rep=  49  mem=11264.8MB  sample ids
+[22:50:32] rep=  49  mem=11266.5MB  left_join (many-to-many)
+[22:50:35] rep=  49  mem=16378.5MB  estimate_choice_model: start
+[22:57:08] rep=  49  mem=25555.3MB  estimate_choice_model: done
+[22:57:08] rep=  49  mem=25555.3MB  compute per_rep + ch_*
+[22:57:14] rep=  49  mem=25638.7MB  free big intermediates
+[22:57:16] rep=  49  mem=6236.2MB  summarize_boot_rep
+[22:57:19] rep=  49  mem=6236.2MB  fwrite csv
+[22:57:19] rep=  49  mem=6236.2MB  rep done in 410.7s
+[22:57:19] rep=  50  mem=6152.8MB  rep start
+[22:57:19] rep=  50  mem=6152.8MB  filter market_data
+[22:57:23] rep=  50  mem=11264.8MB  sample ids
+[22:57:24] rep=  50  mem=11266.5MB  left_join (many-to-many)
+[22:57:27] rep=  50  mem=16378.4MB  estimate_choice_model: start
+[23:03:57] rep=  50  mem=25554.9MB  estimate_choice_model: done
+[23:03:58] rep=  50  mem=25554.9MB  compute per_rep + ch_*
+[23:04:03] rep=  50  mem=25638.3MB  free big intermediates
+[23:04:05] rep=  50  mem=6236.2MB  summarize_boot_rep
+[23:04:08] rep=  50  mem=6236.2MB  fwrite csv
+[23:04:08] rep=  50  mem=6236.2MB  rep done in 409.0s
+[23:04:08] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[23:04:32] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[23:04:32] rep=  51  mem=6087.8MB  rep start
+[23:04:32] rep=  51  mem=6087.8MB  filter market_data
+[23:04:34] rep=  51  mem=11199.9MB  sample ids
+[23:04:34] rep=  51  mem=11201.5MB  left_join (many-to-many)
+[23:04:37] rep=  51  mem=16313.7MB  estimate_choice_model: start
+[23:11:04] rep=  51  mem=25554.1MB  estimate_choice_model: done
+[23:11:04] rep=  51  mem=25554.1MB  compute per_rep + ch_*
+[23:11:10] rep=  51  mem=25637.6MB  free big intermediates
+[23:11:12] rep=  51  mem=6235.8MB  summarize_boot_rep
+[23:11:14] rep=  51  mem=6236.1MB  fwrite csv
+[23:11:15] rep=  51  mem=6236.1MB  rep done in 402.7s
+[23:11:15] rep=  52  mem=6152.8MB  rep start
+[23:11:15] rep=  52  mem=6152.8MB  filter market_data
+[23:11:18] rep=  52  mem=11264.8MB  sample ids
+[23:11:19] rep=  52  mem=11266.5MB  left_join (many-to-many)
+[23:11:21] rep=  52  mem=16378.6MB  estimate_choice_model: start
+[23:18:11] rep=  52  mem=25555.1MB  estimate_choice_model: done
+[23:18:11] rep=  52  mem=25555.1MB  compute per_rep + ch_*
+[23:18:17] rep=  52  mem=25638.6MB  free big intermediates
+[23:18:19] rep=  52  mem=6236.2MB  summarize_boot_rep
+[23:18:22] rep=  52  mem=6236.2MB  fwrite csv
+[23:18:22] rep=  52  mem=6236.2MB  rep done in 427.0s
+[23:18:22] rep=  53  mem=6152.8MB  rep start
+[23:18:22] rep=  53  mem=6152.8MB  filter market_data
+[23:18:26] rep=  53  mem=11264.8MB  sample ids
+[23:18:27] rep=  53  mem=11266.5MB  left_join (many-to-many)
+[23:18:30] rep=  53  mem=16378.6MB  estimate_choice_model: start
+[23:25:03] rep=  53  mem=25555.4MB  estimate_choice_model: done
+[23:25:03] rep=  53  mem=25555.4MB  compute per_rep + ch_*
+[23:25:09] rep=  53  mem=25638.8MB  free big intermediates
+[23:25:11] rep=  53  mem=6236.2MB  summarize_boot_rep
+[23:25:13] rep=  53  mem=6236.2MB  fwrite csv
+[23:25:14] rep=  53  mem=6236.2MB  rep done in 411.7s
+[23:25:14] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[23:25:38] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[23:25:38] rep=  54  mem=6087.8MB  rep start
+[23:25:38] rep=  54  mem=6087.8MB  filter market_data
+[23:25:40] rep=  54  mem=11199.9MB  sample ids
+[23:25:40] rep=  54  mem=11201.5MB  left_join (many-to-many)
+[23:25:43] rep=  54  mem=16313.7MB  estimate_choice_model: start
+[23:32:12] rep=  54  mem=25555.4MB  estimate_choice_model: done
+[23:32:12] rep=  54  mem=25555.4MB  compute per_rep + ch_*
+[23:32:18] rep=  54  mem=25638.8MB  free big intermediates
+[23:32:19] rep=  54  mem=6235.8MB  summarize_boot_rep
+[23:32:22] rep=  54  mem=6236.1MB  fwrite csv
+[23:32:22] rep=  54  mem=6236.1MB  rep done in 404.9s
+[23:32:23] rep=  55  mem=6152.8MB  rep start
+[23:32:23] rep=  55  mem=6152.8MB  filter market_data
+[23:32:25] rep=  55  mem=11264.8MB  sample ids
+[23:32:25] rep=  55  mem=11266.5MB  left_join (many-to-many)
+[23:32:28] rep=  55  mem=16378.6MB  estimate_choice_model: start
+[23:39:16] rep=  55  mem=25555.9MB  estimate_choice_model: done
+[23:39:17] rep=  55  mem=25555.9MB  compute per_rep + ch_*
+[23:39:23] rep=  55  mem=25639.3MB  free big intermediates
+[23:39:24] rep=  55  mem=6236.2MB  summarize_boot_rep
+[23:39:27] rep=  55  mem=6236.2MB  fwrite csv
+[23:39:27] rep=  55  mem=6236.2MB  rep done in 424.8s
+[23:39:28] rep=  56  mem=6152.8MB  rep start
+[23:39:28] rep=  56  mem=6152.8MB  filter market_data
+[23:39:33] rep=  56  mem=11264.8MB  sample ids
+[23:39:33] rep=  56  mem=11266.5MB  left_join (many-to-many)
+[23:39:36] rep=  56  mem=16378.5MB  estimate_choice_model: start
+[23:46:14] rep=  56  mem=25555.0MB  estimate_choice_model: done
+[23:46:15] rep=  56  mem=25555.0MB  compute per_rep + ch_*
+[23:46:20] rep=  56  mem=25638.4MB  free big intermediates
+[23:46:22] rep=  56  mem=6236.2MB  summarize_boot_rep
+[23:46:25] rep=  56  mem=6236.2MB  fwrite csv
+[23:46:25] rep=  56  mem=6236.2MB  rep done in 417.7s
+[23:46:25] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[23:46:50] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[23:46:50] rep=  57  mem=6087.8MB  rep start
+[23:46:50] rep=  57  mem=6087.8MB  filter market_data
+[23:46:52] rep=  57  mem=11199.9MB  sample ids
+[23:46:52] rep=  57  mem=11201.5MB  left_join (many-to-many)
+[23:46:55] rep=  57  mem=16313.4MB  estimate_choice_model: start
+[23:53:22] rep=  57  mem=25554.0MB  estimate_choice_model: done
+[23:53:23] rep=  57  mem=25554.0MB  compute per_rep + ch_*
+[23:53:28] rep=  57  mem=25637.6MB  free big intermediates
+[23:53:30] rep=  57  mem=6235.8MB  summarize_boot_rep
+[23:53:33] rep=  57  mem=6236.1MB  fwrite csv
+[23:53:33] rep=  57  mem=6236.1MB  rep done in 403.4s
+[23:53:33] rep=  58  mem=6152.8MB  rep start
+[23:53:33] rep=  58  mem=6152.8MB  filter market_data
+[23:53:37] rep=  58  mem=11264.8MB  sample ids
+[23:53:37] rep=  58  mem=11266.5MB  left_join (many-to-many)
+[23:53:40] rep=  58  mem=16378.5MB  estimate_choice_model: start
+[00:00:20] rep=  58  mem=25555.6MB  estimate_choice_model: done
+[00:00:20] rep=  58  mem=25555.6MB  compute per_rep + ch_*
+[00:00:26] rep=  58  mem=25639.1MB  free big intermediates
+[00:00:28] rep=  58  mem=6236.2MB  summarize_boot_rep
+[00:00:30] rep=  58  mem=6236.2MB  fwrite csv
+[00:00:31] rep=  58  mem=6236.2MB  rep done in 417.4s
+[00:00:31] rep=  59  mem=6152.8MB  rep start
+[00:00:31] rep=  59  mem=6152.8MB  filter market_data
+[00:00:34] rep=  59  mem=11264.8MB  sample ids
+[00:00:34] rep=  59  mem=11266.5MB  left_join (many-to-many)
+[00:00:37] rep=  59  mem=16378.5MB  estimate_choice_model: start
+[00:07:16] rep=  59  mem=25555.4MB  estimate_choice_model: done
+[00:07:17] rep=  59  mem=25555.4MB  compute per_rep + ch_*
+[00:07:23] rep=  59  mem=25638.8MB  free big intermediates
+[00:07:24] rep=  59  mem=6236.2MB  summarize_boot_rep
+[00:07:27] rep=  59  mem=6236.2MB  fwrite csv
+[00:07:27] rep=  59  mem=6236.2MB  rep done in 416.6s
+[00:07:28] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[00:07:52] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[00:07:52] rep=  60  mem=6087.8MB  rep start
+[00:07:52] rep=  60  mem=6087.8MB  filter market_data
+[00:07:54] rep=  60  mem=11199.9MB  sample ids
+[00:07:54] rep=  60  mem=11201.5MB  left_join (many-to-many)
+[00:07:57] rep=  60  mem=16313.6MB  estimate_choice_model: start
+[00:14:29] rep=  60  mem=25555.0MB  estimate_choice_model: done
+[00:14:30] rep=  60  mem=25555.0MB  compute per_rep + ch_*
+[00:14:35] rep=  60  mem=25638.5MB  free big intermediates
+[00:14:37] rep=  60  mem=6235.8MB  summarize_boot_rep
+[00:14:40] rep=  60  mem=6236.1MB  fwrite csv
+[00:14:40] rep=  60  mem=6236.1MB  rep done in 407.9s
+[00:14:40] rep=  61  mem=6152.8MB  rep start
+[00:14:40] rep=  61  mem=6152.8MB  filter market_data
+[00:14:43] rep=  61  mem=11264.8MB  sample ids
+[00:14:43] rep=  61  mem=11266.5MB  left_join (many-to-many)
+[00:14:46] rep=  61  mem=16378.5MB  estimate_choice_model: start
+[00:21:27] rep=  61  mem=25555.7MB  estimate_choice_model: done
+[00:21:27] rep=  61  mem=25555.7MB  compute per_rep + ch_*
+[00:21:33] rep=  61  mem=25639.1MB  free big intermediates
+[00:21:35] rep=  61  mem=6236.2MB  summarize_boot_rep
+[00:21:38] rep=  61  mem=6236.2MB  fwrite csv
+[00:21:38] rep=  61  mem=6236.2MB  rep done in 417.8s
+[00:21:38] rep=  62  mem=6152.8MB  rep start
+[00:21:38] rep=  62  mem=6152.8MB  filter market_data
+[00:21:41] rep=  62  mem=11264.8MB  sample ids
+[00:21:42] rep=  62  mem=11266.5MB  left_join (many-to-many)
+[00:21:45] rep=  62  mem=16378.5MB  estimate_choice_model: start
+[00:28:17] rep=  62  mem=25554.7MB  estimate_choice_model: done
+[00:28:17] rep=  62  mem=25554.7MB  compute per_rep + ch_*
+[00:28:23] rep=  62  mem=25638.1MB  free big intermediates
+[00:28:25] rep=  62  mem=6236.2MB  summarize_boot_rep
+[00:28:28] rep=  62  mem=6236.2MB  fwrite csv
+[00:28:28] rep=  62  mem=6236.2MB  rep done in 409.8s
+[00:28:28] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[00:28:52] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[00:28:52] rep=  63  mem=6087.8MB  rep start
+[00:28:52] rep=  63  mem=6087.8MB  filter market_data
+[00:28:54] rep=  63  mem=11199.9MB  sample ids
+[00:28:54] rep=  63  mem=11201.5MB  left_join (many-to-many)
+[00:28:57] rep=  63  mem=16313.9MB  estimate_choice_model: start
+[00:35:29] rep=  63  mem=25555.8MB  estimate_choice_model: done
+[00:35:30] rep=  63  mem=25555.8MB  compute per_rep + ch_*
+[00:35:36] rep=  63  mem=25639.2MB  free big intermediates
+[00:35:38] rep=  63  mem=6235.8MB  summarize_boot_rep
+[00:35:41] rep=  63  mem=6236.1MB  fwrite csv
+[00:35:41] rep=  63  mem=6236.1MB  rep done in 409.1s
+[00:35:41] rep=  64  mem=6152.8MB  rep start
+[00:35:41] rep=  64  mem=6152.8MB  filter market_data
+[00:35:44] rep=  64  mem=11264.8MB  sample ids
+[00:35:44] rep=  64  mem=11266.5MB  left_join (many-to-many)
+[00:35:47] rep=  64  mem=16378.7MB  estimate_choice_model: start
+[00:42:46] rep=  64  mem=25555.5MB  estimate_choice_model: done
+[00:42:47] rep=  64  mem=25555.5MB  compute per_rep + ch_*
+[00:42:53] rep=  64  mem=25639.0MB  free big intermediates
+[00:42:55] rep=  64  mem=6236.2MB  summarize_boot_rep
+[00:42:58] rep=  64  mem=6236.2MB  fwrite csv
+[00:42:58] rep=  64  mem=6236.2MB  rep done in 436.7s
+[00:42:58] rep=  65  mem=6152.8MB  rep start
+[00:42:58] rep=  65  mem=6152.8MB  filter market_data
+[00:43:03] rep=  65  mem=11264.8MB  sample ids
+[00:43:03] rep=  65  mem=11266.5MB  left_join (many-to-many)
+[00:43:06] rep=  65  mem=16378.5MB  estimate_choice_model: start
+[00:49:55] rep=  65  mem=25554.8MB  estimate_choice_model: done
+[00:49:56] rep=  65  mem=25554.8MB  compute per_rep + ch_*
+[00:50:02] rep=  65  mem=25638.3MB  free big intermediates
+[00:50:03] rep=  65  mem=6236.2MB  summarize_boot_rep
+[00:50:06] rep=  65  mem=6236.2MB  fwrite csv
+[00:50:07] rep=  65  mem=6236.2MB  rep done in 428.7s
+[00:50:07] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[00:50:31] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[00:50:31] rep=  66  mem=6087.8MB  rep start
+[00:50:31] rep=  66  mem=6087.8MB  filter market_data
+[00:50:33] rep=  66  mem=11199.9MB  sample ids
+[00:50:33] rep=  66  mem=11201.5MB  left_join (many-to-many)
+[00:50:36] rep=  66  mem=16313.8MB  estimate_choice_model: start
+[00:57:29] rep=  66  mem=25554.8MB  estimate_choice_model: done
+[00:57:30] rep=  66  mem=25554.8MB  compute per_rep + ch_*
+[00:57:35] rep=  66  mem=25638.2MB  free big intermediates
+[00:57:37] rep=  66  mem=6235.8MB  summarize_boot_rep
+[00:57:40] rep=  66  mem=6236.1MB  fwrite csv
+[00:57:40] rep=  66  mem=6236.1MB  rep done in 429.1s
+[00:57:40] rep=  67  mem=6152.8MB  rep start
+[00:57:40] rep=  67  mem=6152.8MB  filter market_data
+[00:57:43] rep=  67  mem=11264.8MB  sample ids
+[00:57:43] rep=  67  mem=11266.5MB  left_join (many-to-many)
+[00:57:46] rep=  67  mem=16378.3MB  estimate_choice_model: start
+[01:04:47] rep=  67  mem=25555.0MB  estimate_choice_model: done
+[01:04:47] rep=  67  mem=25555.0MB  compute per_rep + ch_*
+[01:04:53] rep=  67  mem=25638.4MB  free big intermediates
+[01:04:55] rep=  67  mem=6236.2MB  summarize_boot_rep
+[01:04:58] rep=  67  mem=6236.2MB  fwrite csv
+[01:04:58] rep=  67  mem=6236.2MB  rep done in 438.0s
+[01:04:58] rep=  68  mem=6152.8MB  rep start
+[01:04:58] rep=  68  mem=6152.8MB  filter market_data
+[01:05:03] rep=  68  mem=11264.8MB  sample ids
+[01:05:04] rep=  68  mem=11266.5MB  left_join (many-to-many)
+[01:05:06] rep=  68  mem=16378.7MB  estimate_choice_model: start
+[01:11:59] rep=  68  mem=25555.3MB  estimate_choice_model: done
+[01:12:00] rep=  68  mem=25555.3MB  compute per_rep + ch_*
+[01:12:05] rep=  68  mem=25638.7MB  free big intermediates
+[01:12:07] rep=  68  mem=6236.2MB  summarize_boot_rep
+[01:12:10] rep=  68  mem=6236.2MB  fwrite csv
+[01:12:10] rep=  68  mem=6236.2MB  rep done in 432.1s
+[01:12:10] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[01:12:35] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[01:12:35] rep=  69  mem=6087.8MB  rep start
+[01:12:35] rep=  69  mem=6087.8MB  filter market_data
+[01:12:37] rep=  69  mem=11199.9MB  sample ids
+[01:12:38] rep=  69  mem=11201.5MB  left_join (many-to-many)
+[01:12:40] rep=  69  mem=16313.5MB  estimate_choice_model: start
+[01:19:37] rep=  69  mem=25554.7MB  estimate_choice_model: done
+[01:19:38] rep=  69  mem=25554.7MB  compute per_rep + ch_*
+[01:19:44] rep=  69  mem=25638.1MB  free big intermediates
+[01:19:45] rep=  69  mem=6235.8MB  summarize_boot_rep
+[01:19:48] rep=  69  mem=6236.1MB  fwrite csv
+[01:19:49] rep=  69  mem=6236.1MB  rep done in 433.6s
+[01:19:49] rep=  70  mem=6152.8MB  rep start
+[01:19:49] rep=  70  mem=6152.8MB  filter market_data
+[01:19:52] rep=  70  mem=11264.8MB  sample ids
+[01:19:53] rep=  70  mem=11266.5MB  left_join (many-to-many)
+[01:19:55] rep=  70  mem=16378.6MB  estimate_choice_model: start
+[01:27:09] rep=  70  mem=25555.6MB  estimate_choice_model: done
+[01:27:09] rep=  70  mem=25555.6MB  compute per_rep + ch_*
+[01:27:15] rep=  70  mem=25639.0MB  free big intermediates
+[01:27:17] rep=  70  mem=6236.2MB  summarize_boot_rep
+[01:27:20] rep=  70  mem=6236.2MB  fwrite csv
+[01:27:20] rep=  70  mem=6236.2MB  rep done in 451.6s
+[01:27:21] rep=  71  mem=6152.8MB  rep start
+[01:27:21] rep=  71  mem=6152.8MB  filter market_data
+[01:27:25] rep=  71  mem=11264.8MB  sample ids
+[01:27:26] rep=  71  mem=11266.5MB  left_join (many-to-many)
+[01:27:29] rep=  71  mem=16378.5MB  estimate_choice_model: start
+[01:34:33] rep=  71  mem=25555.0MB  estimate_choice_model: done
+[01:34:34] rep=  71  mem=25555.0MB  compute per_rep + ch_*
+[01:34:39] rep=  71  mem=25638.5MB  free big intermediates
+[01:34:41] rep=  71  mem=6236.2MB  summarize_boot_rep
+[01:34:44] rep=  71  mem=6236.2MB  fwrite csv
+[01:34:44] rep=  71  mem=6236.2MB  rep done in 443.6s
+[01:34:44] rep=   0  mem=6152.8MB  === session quota of 3 reps reached, exiting ===
+[01:35:10] rep=   0  mem=6087.8MB  === runner start, market = 9 , reps_per_session = 3 ===
+[01:35:10] rep=  72  mem=6087.8MB  rep start
+[01:35:10] rep=  72  mem=6087.8MB  filter market_data
+[01:35:11] rep=  72  mem=11199.9MB  sample ids
+[01:35:12] rep=  72  mem=11201.5MB  left_join (many-to-many)
+[01:35:15] rep=  72  mem=16313.6MB  estimate_choice_model: start
+[01:42:09] rep=  72  mem=25556.0MB  estimate_choice_model: done
+[01:42:09] rep=  72  mem=25556.0MB  compute per_rep + ch_*
+[01:42:15] rep=  72  mem=25639.5MB  free big intermediates
+[01:42:17] rep=  72  mem=6235.8MB  summarize_boot_rep
