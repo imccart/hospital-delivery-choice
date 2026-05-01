@@ -24,6 +24,30 @@ apply_qntl_bin <- function(x, q10, q25, q50, q75, q90) {
   factor(out, levels = c("10","25","50","75","90","100"))
 }
 
+# When adjacent percentile cutoffs coincide (e.g., q10 == q25 from a heavily
+# zero-inflated patient characteristic), the case_when in apply_qntl_bin sends
+# all qualifying rows to the lower bin and the higher bin is empty. The
+# patients still satisfy the higher-bin cutoff at the same value, so we
+# replicate them into the higher bin. Result: figures and tables show the
+# higher bin with the same point estimate (and bootstrap SE) as the lower bin.
+#
+# `df` must have columns `bin` (chr) and the qbreak columns q10, q25, q50,
+# q75, q90 (one set per row, typically from a left_join on `mkt`).
+duplicate_for_tied_bins <- function(df) {
+  bin_order <- c("10","25","50","75","90","100")
+  q_cols    <- c("q10","q25","q50","q75","q90")
+  out <- df %>% mutate(bin = as.character(bin))
+  for (i in 2:5) {
+    cur  <- bin_order[i]; prv  <- bin_order[i-1]
+    qcur <- q_cols[i];    qprv <- q_cols[i-1]
+    extra <- out %>%
+      filter(bin == prv, .data[[qcur]] == .data[[qprv]]) %>%
+      mutate(bin = cur)
+    if (nrow(extra) > 0) out <- bind_rows(out, extra)
+  }
+  out
+}
+
 summarize_boot_rep <- function(per_rep, bin_spec, b, market_id) {
   hist.list <- c("ch_dist","ch_peri","ch_teach","ch_csection")
   qb_ci <- bin_spec$ci_scorent$qbreaks_by_mkt %>% filter(mkt == market_id)

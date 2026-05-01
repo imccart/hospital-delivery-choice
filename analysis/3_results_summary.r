@@ -246,9 +246,23 @@ for (var in hist.list) {
     effects_mkt <- effects_mkt %>%
       left_join(boot_mkt.se, by=c("bin","mkt")) %>%
       mutate(l_95=mean-1.96*sd,
-             u_95=mean+1.96*sd,
-             bin = factor(bin, levels = bin_lvls)) %>%
+             u_95=mean+1.96*sd) %>%
+      left_join(qbreaks_lookup, by = "mkt") %>%
+      duplicate_for_tied_bins() %>%
+      select(-q10, -q25, -q50, -q75, -q90) %>%
+      mutate(bin = factor(bin, levels = bin_lvls)) %>%
       arrange(bin, mkt)
+
+    # Figure-only fill: augment across-market effects with bin 25 = bin 10 when
+    # q10 == q25 in every market (universal tie). Saved pfx_qntl.csv is untouched.
+    effects_plot <- effects
+    if (all(qbreaks_lookup$q10 == qbreaks_lookup$q25) && !"25" %in% as.character(effects_plot$bin)) {
+      effects_plot <- bind_rows(
+        effects_plot,
+        effects_plot %>% filter(as.character(bin) == "10") %>%
+          mutate(bin = factor("25", levels = bin_lvls))
+      ) %>% arrange(bin)
+    }
 
     # Calculate y-axis limits
     y_max <- max(effects_mkt$u_95, na.rm = TRUE)
@@ -257,12 +271,12 @@ for (var in hist.list) {
 
     # Generate the plot
     plot <- ggplot() +
-      geom_line(data = effects_mkt, aes(x = bin, y = mean, group = mkt), 
+      geom_line(data = effects_mkt, aes(x = bin, y = mean, group = mkt),
                 color = "gray80", linewidth = 0.6) +
-      geom_line(data = effects, aes(x = bin, y = mean, group = 1), color = "black") +
-      geom_errorbar(data = effects, aes(x = bin, ymin = l_95, ymax = u_95), 
+      geom_line(data = effects_plot, aes(x = bin, y = mean, group = 1), color = "black") +
+      geom_errorbar(data = effects_plot, aes(x = bin, ymin = l_95, ymax = u_95),
                     width = 0.2, color = "gray40") +
-      geom_point(data = effects, aes(x = bin, y = mean), size = 2, color = "black") +
+      geom_point(data = effects_plot, aes(x = bin, y = mean), size = 2, color = "black") +
       labs(x = paste0("Bin of ", pat.label), y = "Mean Change in Predicted Probability") +
       coord_cartesian(ylim = c(y_min, y_max)) +
       theme_bw()

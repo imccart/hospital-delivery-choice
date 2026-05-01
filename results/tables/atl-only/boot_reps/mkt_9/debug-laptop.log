@@ -1,0 +1,886 @@
+[07:07:53] rep=   0  mem= 516.8MB  === runner start, market = 9 , reps_per_session = 20 ===
+[07:07:53] rep=  72  mem= 516.8MB  rep start
+[07:07:53] rep=  72  mem= 516.8MB  filter market_data
+[07:08:00] rep=  72  mem=5628.9MB  sample ids
+[07:08:00] rep=  72  mem=5630.5MB  left_join (many-to-many)
+[07:08:15] rep=  72  mem=10743.7MB  estimate_choice_model: start
+[07:37:38] rep=  72  mem=19986.2MB  estimate_choice_model: done
+[07:37:38] rep=  72  mem=19986.2MB  compute per_rep + ch_*
+[07:37:46] rep=  72  mem=20069.7MB  free big intermediates
+[07:37:48] rep=  72  mem= 666.1MB  summarize_boot_rep
+[07:37:51] rep=  72  mem= 666.4MB  fwrite csv
+[07:37:51] rep=  72  mem= 666.4MB  rep done in 1798.8s
+[07:37:52] rep=  73  mem= 583.0MB  rep start
+[07:37:52] rep=  73  mem= 583.0MB  filter market_data
+[07:38:05] rep=  73  mem=5695.1MB  sample ids
+[07:38:06] rep=  73  mem=5696.7MB  left_join (many-to-many)
+[07:38:09] rep=  73  mem=10808.8MB  estimate_choice_model: start
+[07:54:52] rep=  73  mem=19986.7MB  estimate_choice_model: done
+[07:54:53] rep=  73  mem=19986.7MB  compute per_rep + ch_*
+[07:55:03] rep=  73  mem=20070.2MB  free big intermediates
+[07:55:04] rep=  73  mem= 666.5MB  summarize_boot_rep
+[07:55:09] rep=  73  mem= 666.5MB  fwrite csv
+[07:55:09] rep=  73  mem= 666.5MB  rep done in 1037.3s
+[07:55:09] rep=  74  mem= 583.0MB  rep start
+[07:55:10] rep=  74  mem= 583.0MB  filter market_data
+[07:55:25] rep=  74  mem=5695.1MB  sample ids
+[07:55:26] rep=  74  mem=5696.7MB  left_join (many-to-many)
+[07:55:30] rep=  74  mem=10808.6MB  estimate_choice_model: start
+[08:07:11] rep=  74  mem=19986.1MB  estimate_choice_model: done
+[08:07:12] rep=  74  mem=19986.1MB  compute per_rep + ch_*
+[08:07:22] rep=  74  mem=20069.6MB  free big intermediates
+[08:07:23] rep=  74  mem= 666.5MB  summarize_boot_rep
+[08:07:27] rep=  74  mem= 666.5MB  fwrite csv
+[08:07:28] rep=  74  mem= 666.5MB  rep done in 738.5s
+[08:07:28] rep=  75  mem= 583.0MB  rep start
+[08:07:28] rep=  75  mem= 583.0MB  filter market_data
+[08:07:45] rep=  75  mem=5695.1MB  sample ids
+[08:07:45] rep=  75  mem=5696.7MB  left_join (many-to-many)
+[08:07:49] rep=  75  mem=10808.6MB  estimate_choice_model: start
+[08:20:52] rep=  75  mem=19985.1MB  estimate_choice_model: done
+[08:20:53] rep=  75  mem=19985.1MB  compute per_rep + ch_*
+[08:21:03] rep=  75  mem=20068.5MB  free big intermediates
+[08:21:05] rep=  75  mem= 666.5MB  summarize_boot_rep
+[08:21:10] rep=  75  mem= 666.5MB  fwrite csv
+[08:21:10] rep=  75  mem= 666.5MB  rep done in 822.2s
+[08:21:11] rep=  76  mem= 583.0MB  rep start
+[08:21:11] rep=  76  mem= 583.0MB  filter market_data
+[08:21:29] rep=  76  mem=5695.1MB  sample ids
+[08:21:29] rep=  76  mem=5696.7MB  left_join (many-to-many)
+[08:21:33] rep=  76  mem=10808.7MB  estimate_choice_model: start
+[09:38:49] rep=  76  mem=19985.2MB  estimate_choice_model: done
+[09:38:50] rep=  76  mem=19985.2MB  compute per_rep + ch_*
+[09:39:02] rep=  76  mem=20068.6MB  free big intermediates
+[09:39:03] rep=  76  mem= 666.5MB  summarize_boot_rep
+[09:39:09] rep=  76  mem= 666.5MB  fwrite csv
+[09:39:09] rep=  76  mem= 666.5MB  rep done in 4678.6s
+[09:39:10] rep=  77  mem= 583.0MB  rep start
+[09:39:10] rep=  77  mem= 583.0MB  filter market_data
+[09:39:28] rep=  77  mem=5695.1MB  sample ids
+[09:39:28] rep=  77  mem=5696.7MB  left_join (many-to-many)
+[09:39:33] rep=  77  mem=10808.6MB  estimate_choice_model: start
+[09:53:18] rep=  77  mem=19985.2MB  estimate_choice_model: done
+[09:53:19] rep=  77  mem=19985.2MB  compute per_rep + ch_*
+[09:53:29] rep=  77  mem=20068.6MB  free big intermediates
+[09:53:31] rep=  77  mem= 666.5MB  summarize_boot_rep
+[09:53:35] rep=  77  mem= 666.5MB  fwrite csv
+[09:53:35] rep=  77  mem= 666.5MB  rep done in 866.2s
+[09:53:36] rep=  78  mem= 583.0MB  rep start
+[09:53:36] rep=  78  mem= 583.0MB  filter market_data
+[09:53:55] rep=  78  mem=5695.1MB  sample ids
+[09:53:55] rep=  78  mem=5696.7MB  left_join (many-to-many)
+[09:53:59] rep=  78  mem=10808.6MB  estimate_choice_model: start
+[10:07:07] rep=  78  mem=19986.0MB  estimate_choice_model: done
+[10:07:08] rep=  78  mem=19986.0MB  compute per_rep + ch_*
+[10:07:19] rep=  78  mem=20069.4MB  free big intermediates
+[10:07:20] rep=  78  mem= 666.5MB  summarize_boot_rep
+[10:07:25] rep=  78  mem= 666.5MB  fwrite csv
+[10:07:25] rep=  78  mem= 666.5MB  rep done in 829.0s
+[10:07:25] rep=  79  mem= 583.0MB  rep start
+[10:07:25] rep=  79  mem= 583.0MB  filter market_data
+[10:07:44] rep=  79  mem=5695.1MB  sample ids
+[10:07:44] rep=  79  mem=5696.7MB  left_join (many-to-many)
+[10:07:48] rep=  79  mem=10808.6MB  estimate_choice_model: start
+[10:21:02] rep=  79  mem=19985.7MB  estimate_choice_model: done
+[10:21:02] rep=  79  mem=19985.7MB  compute per_rep + ch_*
+[10:21:13] rep=  79  mem=20069.1MB  free big intermediates
+[10:21:14] rep=  79  mem= 666.5MB  summarize_boot_rep
+[10:21:19] rep=  79  mem= 666.5MB  fwrite csv
+[10:21:19] rep=  79  mem= 666.5MB  rep done in 834.3s
+[10:21:20] rep=  80  mem= 583.0MB  rep start
+[10:21:20] rep=  80  mem= 583.0MB  filter market_data
+[10:21:39] rep=  80  mem=5695.1MB  sample ids
+[10:21:39] rep=  80  mem=5696.7MB  left_join (many-to-many)
+[10:21:44] rep=  80  mem=10808.6MB  estimate_choice_model: start
+[10:35:35] rep=  80  mem=19985.6MB  estimate_choice_model: done
+[10:35:35] rep=  80  mem=19985.6MB  compute per_rep + ch_*
+[10:35:45] rep=  80  mem=20069.0MB  free big intermediates
+[10:35:47] rep=  80  mem= 666.5MB  summarize_boot_rep
+[10:35:51] rep=  80  mem= 666.5MB  fwrite csv
+[10:35:51] rep=  80  mem= 666.5MB  rep done in 871.9s
+[10:35:52] rep=  81  mem= 583.0MB  rep start
+[10:35:52] rep=  81  mem= 583.0MB  filter market_data
+[10:36:11] rep=  81  mem=5695.1MB  sample ids
+[10:36:11] rep=  81  mem=5696.7MB  left_join (many-to-many)
+[10:36:16] rep=  81  mem=10808.8MB  estimate_choice_model: start
+[10:53:28] rep=  81  mem=19985.4MB  estimate_choice_model: done
+[10:53:30] rep=  81  mem=19985.4MB  compute per_rep + ch_*
+[10:53:53] rep=  81  mem=20068.8MB  free big intermediates
+[10:53:57] rep=  81  mem= 666.5MB  summarize_boot_rep
+[10:54:06] rep=  81  mem= 666.5MB  fwrite csv
+[10:54:11] rep=  81  mem= 666.5MB  rep done in 1099.0s
+[10:54:13] rep=  82  mem= 583.0MB  rep start
+[10:54:13] rep=  82  mem= 583.0MB  filter market_data
+[10:55:15] rep=  82  mem=5695.1MB  sample ids
+[10:55:17] rep=  82  mem=5696.7MB  left_join (many-to-many)
+[10:55:26] rep=  82  mem=10808.4MB  estimate_choice_model: start
+[11:20:28] rep=  82  mem=19984.8MB  estimate_choice_model: done
+[11:20:29] rep=  82  mem=19984.8MB  compute per_rep + ch_*
+[11:20:39] rep=  82  mem=20068.4MB  free big intermediates
+[11:20:41] rep=  82  mem= 666.5MB  summarize_boot_rep
+[11:20:46] rep=  82  mem= 666.5MB  fwrite csv
+[11:20:46] rep=  82  mem= 666.5MB  rep done in 1593.6s
+[11:20:47] rep=  83  mem= 583.0MB  rep start
+[11:20:47] rep=  83  mem= 583.0MB  filter market_data
+[11:21:06] rep=  83  mem=5695.1MB  sample ids
+[11:21:07] rep=  83  mem=5696.7MB  left_join (many-to-many)
+[11:21:11] rep=  83  mem=10808.9MB  estimate_choice_model: start
+[11:35:34] rep=  83  mem=19986.2MB  estimate_choice_model: done
+[11:35:35] rep=  83  mem=19986.2MB  compute per_rep + ch_*
+[11:35:46] rep=  83  mem=20069.6MB  free big intermediates
+[11:35:48] rep=  83  mem= 666.5MB  summarize_boot_rep
+[11:35:53] rep=  83  mem= 666.5MB  fwrite csv
+[11:35:53] rep=  83  mem= 666.5MB  rep done in 907.0s
+[11:35:54] rep=  84  mem= 583.0MB  rep start
+[11:35:54] rep=  84  mem= 583.0MB  filter market_data
+[11:36:15] rep=  84  mem=5695.1MB  sample ids
+[11:36:16] rep=  84  mem=5696.7MB  left_join (many-to-many)
+[11:36:21] rep=  84  mem=10808.7MB  estimate_choice_model: start
+[11:51:00] rep=  84  mem=19985.2MB  estimate_choice_model: done
+[11:51:01] rep=  84  mem=19985.2MB  compute per_rep + ch_*
+[11:51:11] rep=  84  mem=20068.7MB  free big intermediates
+[11:51:12] rep=  84  mem= 666.5MB  summarize_boot_rep
+[11:51:17] rep=  84  mem= 666.5MB  fwrite csv
+[11:51:17] rep=  84  mem= 666.5MB  rep done in 923.4s
+[11:51:17] rep=  85  mem= 583.0MB  rep start
+[11:51:18] rep=  85  mem= 583.0MB  filter market_data
+[11:51:37] rep=  85  mem=5695.1MB  sample ids
+[11:51:37] rep=  85  mem=5696.7MB  left_join (many-to-many)
+[11:51:42] rep=  85  mem=10808.6MB  estimate_choice_model: start
+[12:05:03] rep=  85  mem=19984.7MB  estimate_choice_model: done
+[12:05:03] rep=  85  mem=19984.7MB  compute per_rep + ch_*
+[12:05:14] rep=  85  mem=20068.1MB  free big intermediates
+[12:05:15] rep=  85  mem= 666.5MB  summarize_boot_rep
+[12:05:19] rep=  85  mem= 666.5MB  fwrite csv
+[12:05:20] rep=  85  mem= 666.5MB  rep done in 842.5s
+[12:05:20] rep=  86  mem= 583.0MB  rep start
+[12:05:20] rep=  86  mem= 583.0MB  filter market_data
+[12:05:39] rep=  86  mem=5695.1MB  sample ids
+[12:05:39] rep=  86  mem=5696.7MB  left_join (many-to-many)
+[12:05:44] rep=  86  mem=10808.8MB  estimate_choice_model: start
+[12:19:36] rep=  86  mem=19985.9MB  estimate_choice_model: done
+[12:19:37] rep=  86  mem=19985.9MB  compute per_rep + ch_*
+[12:19:48] rep=  86  mem=20069.3MB  free big intermediates
+[12:19:49] rep=  86  mem= 666.5MB  summarize_boot_rep
+[12:19:54] rep=  86  mem= 666.5MB  fwrite csv
+[12:19:54] rep=  86  mem= 666.5MB  rep done in 874.1s
+[12:19:55] rep=  87  mem= 583.0MB  rep start
+[12:19:55] rep=  87  mem= 583.0MB  filter market_data
+[12:20:14] rep=  87  mem=5695.1MB  sample ids
+[12:20:15] rep=  87  mem=5696.7MB  left_join (many-to-many)
+[12:20:20] rep=  87  mem=10808.8MB  estimate_choice_model: start
+[12:33:46] rep=  87  mem=19985.5MB  estimate_choice_model: done
+[12:33:46] rep=  87  mem=19985.5MB  compute per_rep + ch_*
+[12:33:56] rep=  87  mem=20068.9MB  free big intermediates
+[12:33:58] rep=  87  mem= 666.5MB  summarize_boot_rep
+[12:34:02] rep=  87  mem= 666.5MB  fwrite csv
+[12:34:02] rep=  87  mem= 666.5MB  rep done in 848.1s
+[12:34:03] rep=  88  mem= 583.0MB  rep start
+[12:34:03] rep=  88  mem= 583.0MB  filter market_data
+[12:34:22] rep=  88  mem=5695.1MB  sample ids
+[12:34:23] rep=  88  mem=5696.7MB  left_join (many-to-many)
+[12:34:26] rep=  88  mem=10808.9MB  estimate_choice_model: start
+[12:47:38] rep=  88  mem=19986.5MB  estimate_choice_model: done
+[12:47:38] rep=  88  mem=19986.5MB  compute per_rep + ch_*
+[12:47:49] rep=  88  mem=20070.0MB  free big intermediates
+[12:47:51] rep=  88  mem= 666.5MB  summarize_boot_rep
+[12:47:55] rep=  88  mem= 666.5MB  fwrite csv
+[12:47:55] rep=  88  mem= 666.5MB  rep done in 832.7s
+[12:47:56] rep=  89  mem= 583.0MB  rep start
+[12:47:56] rep=  89  mem= 583.0MB  filter market_data
+[12:48:14] rep=  89  mem=5695.1MB  sample ids
+[12:48:14] rep=  89  mem=5696.7MB  left_join (many-to-many)
+[12:48:18] rep=  89  mem=10808.8MB  estimate_choice_model: start
+[13:01:53] rep=  89  mem=19986.0MB  estimate_choice_model: done
+[13:01:54] rep=  89  mem=19986.0MB  compute per_rep + ch_*
+[13:02:06] rep=  89  mem=20069.5MB  free big intermediates
+[13:03:09] rep=  89  mem= 666.5MB  summarize_boot_rep
+[13:03:14] rep=  89  mem= 666.5MB  fwrite csv
+[13:03:14] rep=  89  mem= 666.5MB  rep done in 918.9s
+[13:03:15] rep=  90  mem= 583.0MB  rep start
+[13:03:15] rep=  90  mem= 583.0MB  filter market_data
+[13:03:35] rep=  90  mem=5695.1MB  sample ids
+[13:03:36] rep=  90  mem=5696.7MB  left_join (many-to-many)
+[13:03:40] rep=  90  mem=10808.8MB  estimate_choice_model: start
+[13:47:52] rep=   0  mem= 516.8MB  === runner start, market = 9 , reps_per_session = 20 ===
+[13:47:53] rep=  90  mem= 516.8MB  rep start
+[13:47:53] rep=  90  mem= 516.8MB  filter market_data
+[13:48:34] rep=  90  mem=5628.9MB  sample ids
+[13:48:37] rep=  90  mem=5630.5MB  left_join (many-to-many)
+[13:48:57] rep=  90  mem=10743.8MB  estimate_choice_model: start
+[14:12:44] rep=  90  mem=19985.8MB  estimate_choice_model: done
+[14:12:45] rep=  90  mem=19985.8MB  compute per_rep + ch_*
+[14:12:56] rep=  90  mem=20069.3MB  free big intermediates
+[14:12:58] rep=  90  mem= 666.1MB  summarize_boot_rep
+[14:13:03] rep=  90  mem= 666.4MB  fwrite csv
+[14:13:03] rep=  90  mem= 666.4MB  rep done in 1510.6s
+[14:13:04] rep=  91  mem= 583.0MB  rep start
+[14:13:04] rep=  91  mem= 583.0MB  filter market_data
+[14:13:20] rep=  91  mem=5695.1MB  sample ids
+[14:13:21] rep=  91  mem=5696.7MB  left_join (many-to-many)
+[14:13:26] rep=  91  mem=10808.8MB  estimate_choice_model: start
+[14:26:07] rep=  91  mem=19985.0MB  estimate_choice_model: done
+[14:26:08] rep=  91  mem=19985.0MB  compute per_rep + ch_*
+[14:26:17] rep=  91  mem=20068.4MB  free big intermediates
+[14:26:18] rep=  91  mem= 666.5MB  summarize_boot_rep
+[14:26:23] rep=  91  mem= 666.5MB  fwrite csv
+[14:26:23] rep=  91  mem= 666.5MB  rep done in 799.6s
+[14:26:23] rep=  92  mem= 583.0MB  rep start
+[14:26:24] rep=  92  mem= 583.0MB  filter market_data
+[14:26:39] rep=  92  mem=5695.1MB  sample ids
+[14:26:40] rep=  92  mem=5696.7MB  left_join (many-to-many)
+[14:26:44] rep=  92  mem=10808.7MB  estimate_choice_model: start
+[14:40:32] rep=  92  mem=19985.7MB  estimate_choice_model: done
+[14:40:32] rep=  92  mem=19985.7MB  compute per_rep + ch_*
+[14:40:44] rep=  92  mem=20069.1MB  free big intermediates
+[14:40:45] rep=  92  mem= 666.5MB  summarize_boot_rep
+[14:40:49] rep=  92  mem= 666.5MB  fwrite csv
+[14:40:50] rep=  92  mem= 666.5MB  rep done in 866.4s
+[14:40:50] rep=  93  mem= 583.0MB  rep start
+[14:40:50] rep=  93  mem= 583.0MB  filter market_data
+[14:41:06] rep=  93  mem=5695.1MB  sample ids
+[14:41:07] rep=  93  mem=5696.7MB  left_join (many-to-many)
+[14:41:11] rep=  93  mem=10808.8MB  estimate_choice_model: start
+[14:56:20] rep=  93  mem=19986.4MB  estimate_choice_model: done
+[14:56:21] rep=  93  mem=19986.4MB  compute per_rep + ch_*
+[14:56:31] rep=  93  mem=20069.8MB  free big intermediates
+[14:56:33] rep=  93  mem= 666.5MB  summarize_boot_rep
+[14:56:37] rep=  93  mem= 666.5MB  fwrite csv
+[14:56:38] rep=  93  mem= 666.5MB  rep done in 947.7s
+[14:56:38] rep=  94  mem= 583.0MB  rep start
+[14:56:38] rep=  94  mem= 583.0MB  filter market_data
+[14:56:55] rep=  94  mem=5695.1MB  sample ids
+[14:56:56] rep=  94  mem=5696.7MB  left_join (many-to-many)
+[14:57:01] rep=  94  mem=10808.8MB  estimate_choice_model: start
+[15:15:02] rep=  94  mem=19986.6MB  estimate_choice_model: done
+[15:15:03] rep=  94  mem=19986.6MB  compute per_rep + ch_*
+[15:15:13] rep=  94  mem=20070.1MB  free big intermediates
+[15:15:14] rep=  94  mem= 666.5MB  summarize_boot_rep
+[15:15:20] rep=  94  mem= 666.5MB  fwrite csv
+[15:15:20] rep=  94  mem= 666.5MB  rep done in 1122.3s
+[15:15:21] rep=  95  mem= 583.0MB  rep start
+[15:15:21] rep=  95  mem= 583.0MB  filter market_data
+[15:15:38] rep=  95  mem=5695.1MB  sample ids
+[15:15:38] rep=  95  mem=5696.7MB  left_join (many-to-many)
+[15:15:43] rep=  95  mem=10808.9MB  estimate_choice_model: start
+[15:29:42] rep=  95  mem=19987.0MB  estimate_choice_model: done
+[15:29:43] rep=  95  mem=19987.0MB  compute per_rep + ch_*
+[15:29:52] rep=  95  mem=20070.4MB  free big intermediates
+[15:29:54] rep=  95  mem= 666.5MB  summarize_boot_rep
+[15:29:58] rep=  95  mem= 666.5MB  fwrite csv
+[15:29:58] rep=  95  mem= 666.5MB  rep done in 877.7s
+[15:29:59] rep=  96  mem= 583.0MB  rep start
+[15:29:59] rep=  96  mem= 583.0MB  filter market_data
+[15:30:16] rep=  96  mem=5695.1MB  sample ids
+[15:30:16] rep=  96  mem=5696.7MB  left_join (many-to-many)
+[15:30:20] rep=  96  mem=10808.8MB  estimate_choice_model: start
+[15:45:52] rep=  96  mem=19986.3MB  estimate_choice_model: done
+[15:45:53] rep=  96  mem=19986.3MB  compute per_rep + ch_*
+[15:46:03] rep=  96  mem=20069.7MB  free big intermediates
+[15:46:04] rep=  96  mem= 666.5MB  summarize_boot_rep
+[15:46:08] rep=  96  mem= 666.5MB  fwrite csv
+[15:46:09] rep=  96  mem= 666.5MB  rep done in 970.3s
+[15:46:09] rep=  97  mem= 583.0MB  rep start
+[15:46:09] rep=  97  mem= 583.0MB  filter market_data
+[15:46:26] rep=  97  mem=5695.1MB  sample ids
+[15:46:27] rep=  97  mem=5696.7MB  left_join (many-to-many)
+[15:46:32] rep=  97  mem=10808.6MB  estimate_choice_model: start
+[16:01:01] rep=  97  mem=19984.9MB  estimate_choice_model: done
+[16:01:02] rep=  97  mem=19984.9MB  compute per_rep + ch_*
+[16:01:13] rep=  97  mem=20068.4MB  free big intermediates
+[16:01:15] rep=  97  mem= 666.5MB  summarize_boot_rep
+[16:01:19] rep=  97  mem= 666.5MB  fwrite csv
+[16:01:20] rep=  97  mem= 666.5MB  rep done in 910.7s
+[16:01:20] rep=  98  mem= 583.0MB  rep start
+[16:01:20] rep=  98  mem= 583.0MB  filter market_data
+[16:01:38] rep=  98  mem=5695.1MB  sample ids
+[16:01:39] rep=  98  mem=5696.7MB  left_join (many-to-many)
+[16:01:44] rep=  98  mem=10808.8MB  estimate_choice_model: start
+[17:17:22] rep=   0  mem= 516.8MB  === runner start, market = 9 , reps_per_session = 20 ===
+[17:17:22] rep=  98  mem= 516.8MB  rep start
+[17:17:22] rep=  98  mem= 516.8MB  filter market_data
+[17:17:29] rep=  98  mem=5628.9MB  sample ids
+[17:17:29] rep=  98  mem=5630.5MB  left_join (many-to-many)
+[17:17:33] rep=  98  mem=10743.8MB  estimate_choice_model: start
+[17:51:38] rep=  98  mem=19984.5MB  estimate_choice_model: done
+[17:51:41] rep=  98  mem=19984.5MB  compute per_rep + ch_*
+[17:52:16] rep=  98  mem=20067.9MB  free big intermediates
+[17:52:21] rep=  98  mem= 666.1MB  summarize_boot_rep
+[17:52:36] rep=  98  mem= 666.4MB  fwrite csv
+[17:52:37] rep=  98  mem= 666.4MB  rep done in 2115.0s
+[17:52:39] rep=  99  mem= 583.0MB  rep start
+[17:52:40] rep=  99  mem= 583.0MB  filter market_data
+[17:53:28] rep=  99  mem=5695.1MB  sample ids
+[17:53:30] rep=  99  mem=5696.7MB  left_join (many-to-many)
+[17:53:48] rep=  99  mem=10808.7MB  estimate_choice_model: start
+[18:14:51] rep=  99  mem=19985.9MB  estimate_choice_model: done
+[18:14:52] rep=  99  mem=19985.9MB  compute per_rep + ch_*
+[18:15:02] rep=  99  mem=20069.3MB  free big intermediates
+[18:15:03] rep=  99  mem= 666.5MB  summarize_boot_rep
+[18:15:08] rep=  99  mem= 666.5MB  fwrite csv
+[18:15:08] rep=  99  mem= 666.5MB  rep done in 1350.1s
+[18:15:09] rep= 100  mem= 583.0MB  rep start
+[18:15:09] rep= 100  mem= 583.0MB  filter market_data
+[18:15:25] rep= 100  mem=5695.1MB  sample ids
+[18:15:26] rep= 100  mem=5696.7MB  left_join (many-to-many)
+[18:15:30] rep= 100  mem=10808.7MB  estimate_choice_model: start
+[18:28:13] rep= 100  mem=19985.2MB  estimate_choice_model: done
+[18:28:13] rep= 100  mem=19985.2MB  compute per_rep + ch_*
+[18:28:23] rep= 100  mem=20068.7MB  free big intermediates
+[18:28:25] rep= 100  mem= 666.5MB  summarize_boot_rep
+[18:28:29] rep= 100  mem= 666.5MB  fwrite csv
+[18:28:30] rep= 100  mem= 666.5MB  rep done in 801.4s
+[18:28:30] rep= 101  mem= 583.0MB  rep start
+[18:28:30] rep= 101  mem= 583.0MB  filter market_data
+[18:28:47] rep= 101  mem=5695.1MB  sample ids
+[18:28:48] rep= 101  mem=5696.7MB  left_join (many-to-many)
+[18:28:52] rep= 101  mem=10808.8MB  estimate_choice_model: start
+[18:41:53] rep= 101  mem=19985.6MB  estimate_choice_model: done
+[18:41:53] rep= 101  mem=19985.6MB  compute per_rep + ch_*
+[18:42:03] rep= 101  mem=20069.0MB  free big intermediates
+[18:42:05] rep= 101  mem= 666.5MB  summarize_boot_rep
+[18:42:09] rep= 101  mem= 666.5MB  fwrite csv
+[18:42:10] rep= 101  mem= 666.5MB  rep done in 819.6s
+[18:42:10] rep= 102  mem= 583.0MB  rep start
+[18:42:10] rep= 102  mem= 583.0MB  filter market_data
+[18:42:27] rep= 102  mem=5695.1MB  sample ids
+[18:42:28] rep= 102  mem=5696.7MB  left_join (many-to-many)
+[18:42:32] rep= 102  mem=10808.9MB  estimate_choice_model: start
+[18:56:38] rep= 102  mem=19986.1MB  estimate_choice_model: done
+[18:56:39] rep= 102  mem=19986.1MB  compute per_rep + ch_*
+[18:56:49] rep= 102  mem=20069.5MB  free big intermediates
+[18:56:50] rep= 102  mem= 666.5MB  summarize_boot_rep
+[18:56:55] rep= 102  mem= 666.5MB  fwrite csv
+[18:56:55] rep= 102  mem= 666.5MB  rep done in 885.5s
+[18:56:56] rep= 103  mem= 583.0MB  rep start
+[18:56:56] rep= 103  mem= 583.0MB  filter market_data
+[18:57:13] rep= 103  mem=5695.1MB  sample ids
+[18:57:13] rep= 103  mem=5696.7MB  left_join (many-to-many)
+[18:57:17] rep= 103  mem=10808.5MB  estimate_choice_model: start
+[19:11:39] rep= 103  mem=19985.8MB  estimate_choice_model: done
+[19:11:40] rep= 103  mem=19985.8MB  compute per_rep + ch_*
+[19:11:49] rep= 103  mem=20069.2MB  free big intermediates
+[19:11:51] rep= 103  mem= 666.5MB  summarize_boot_rep
+[19:11:55] rep= 103  mem= 666.5MB  fwrite csv
+[19:11:56] rep= 103  mem= 666.5MB  rep done in 899.9s
+[19:11:56] rep= 104  mem= 583.0MB  rep start
+[19:11:56] rep= 104  mem= 583.0MB  filter market_data
+[19:12:14] rep= 104  mem=5695.1MB  sample ids
+[19:12:14] rep= 104  mem=5696.7MB  left_join (many-to-many)
+[19:12:19] rep= 104  mem=10808.7MB  estimate_choice_model: start
+[19:26:04] rep= 104  mem=19985.7MB  estimate_choice_model: done
+[19:26:05] rep= 104  mem=19985.7MB  compute per_rep + ch_*
+[19:26:15] rep= 104  mem=20069.1MB  free big intermediates
+[19:26:16] rep= 104  mem= 666.5MB  summarize_boot_rep
+[19:26:21] rep= 104  mem= 666.5MB  fwrite csv
+[19:26:21] rep= 104  mem= 666.5MB  rep done in 865.4s
+[19:26:22] rep= 105  mem= 583.0MB  rep start
+[19:26:22] rep= 105  mem= 583.0MB  filter market_data
+[19:26:40] rep= 105  mem=5695.1MB  sample ids
+[19:26:40] rep= 105  mem=5696.7MB  left_join (many-to-many)
+[19:26:44] rep= 105  mem=10808.6MB  estimate_choice_model: start
+[19:40:18] rep= 105  mem=19985.7MB  estimate_choice_model: done
+[19:40:18] rep= 105  mem=19985.7MB  compute per_rep + ch_*
+[19:40:28] rep= 105  mem=20069.2MB  free big intermediates
+[19:40:30] rep= 105  mem= 666.5MB  summarize_boot_rep
+[19:40:34] rep= 105  mem= 666.5MB  fwrite csv
+[19:40:35] rep= 105  mem= 666.5MB  rep done in 853.1s
+[19:40:35] rep= 106  mem= 583.0MB  rep start
+[19:40:35] rep= 106  mem= 583.0MB  filter market_data
+[19:40:53] rep= 106  mem=5695.1MB  sample ids
+[19:40:53] rep= 106  mem=5696.7MB  left_join (many-to-many)
+[19:40:57] rep= 106  mem=10808.8MB  estimate_choice_model: start
+[19:54:34] rep= 106  mem=19985.9MB  estimate_choice_model: done
+[19:54:34] rep= 106  mem=19985.9MB  compute per_rep + ch_*
+[19:54:44] rep= 106  mem=20069.4MB  free big intermediates
+[19:54:46] rep= 106  mem= 666.5MB  summarize_boot_rep
+[19:54:50] rep= 106  mem= 666.5MB  fwrite csv
+[19:54:50] rep= 106  mem= 666.5MB  rep done in 855.5s
+[19:54:51] rep= 107  mem= 583.0MB  rep start
+[19:54:51] rep= 107  mem= 583.0MB  filter market_data
+[19:55:09] rep= 107  mem=5695.1MB  sample ids
+[19:55:10] rep= 107  mem=5696.7MB  left_join (many-to-many)
+[19:55:14] rep= 107  mem=10808.7MB  estimate_choice_model: start
+[20:08:21] rep= 107  mem=19985.4MB  estimate_choice_model: done
+[20:08:22] rep= 107  mem=19985.4MB  compute per_rep + ch_*
+[20:08:32] rep= 107  mem=20068.8MB  free big intermediates
+[20:08:33] rep= 107  mem= 666.5MB  summarize_boot_rep
+[20:08:37] rep= 107  mem= 666.5MB  fwrite csv
+[20:08:38] rep= 107  mem= 666.5MB  rep done in 827.0s
+[20:08:38] rep= 108  mem= 583.0MB  rep start
+[20:08:38] rep= 108  mem= 583.0MB  filter market_data
+[20:08:55] rep= 108  mem=5695.1MB  sample ids
+[20:08:56] rep= 108  mem=5696.7MB  left_join (many-to-many)
+[20:08:59] rep= 108  mem=10808.8MB  estimate_choice_model: start
+[20:22:19] rep= 108  mem=19985.9MB  estimate_choice_model: done
+[20:22:20] rep= 108  mem=19985.9MB  compute per_rep + ch_*
+[20:22:31] rep= 108  mem=20069.3MB  free big intermediates
+[20:22:32] rep= 108  mem= 666.5MB  summarize_boot_rep
+[20:22:37] rep= 108  mem= 666.5MB  fwrite csv
+[20:22:37] rep= 108  mem= 666.5MB  rep done in 839.5s
+[20:22:38] rep= 109  mem= 583.0MB  rep start
+[20:22:38] rep= 109  mem= 583.0MB  filter market_data
+[20:22:56] rep= 109  mem=5695.1MB  sample ids
+[20:22:57] rep= 109  mem=5696.7MB  left_join (many-to-many)
+[20:23:01] rep= 109  mem=10808.7MB  estimate_choice_model: start
+[20:36:27] rep= 109  mem=19985.1MB  estimate_choice_model: done
+[20:36:28] rep= 109  mem=19985.1MB  compute per_rep + ch_*
+[20:36:37] rep= 109  mem=20068.5MB  free big intermediates
+[20:36:39] rep= 109  mem= 666.5MB  summarize_boot_rep
+[20:36:43] rep= 109  mem= 666.5MB  fwrite csv
+[20:36:43] rep= 109  mem= 666.5MB  rep done in 845.9s
+[20:36:44] rep= 110  mem= 583.0MB  rep start
+[20:36:44] rep= 110  mem= 583.0MB  filter market_data
+[20:37:02] rep= 110  mem=5695.1MB  sample ids
+[20:37:03] rep= 110  mem=5696.7MB  left_join (many-to-many)
+[20:37:07] rep= 110  mem=10808.8MB  estimate_choice_model: start
+[20:51:00] rep= 110  mem=19985.7MB  estimate_choice_model: done
+[20:51:00] rep= 110  mem=19985.7MB  compute per_rep + ch_*
+[20:51:11] rep= 110  mem=20069.1MB  free big intermediates
+[20:51:13] rep= 110  mem= 666.5MB  summarize_boot_rep
+[20:51:17] rep= 110  mem= 666.5MB  fwrite csv
+[20:51:18] rep= 110  mem= 666.5MB  rep done in 874.1s
+[20:51:18] rep= 111  mem= 583.0MB  rep start
+[20:51:18] rep= 111  mem= 583.0MB  filter market_data
+[20:51:35] rep= 111  mem=5695.1MB  sample ids
+[20:51:36] rep= 111  mem=5696.7MB  left_join (many-to-many)
+[20:51:40] rep= 111  mem=10808.5MB  estimate_choice_model: start
+[21:15:24] rep= 111  mem=19984.3MB  estimate_choice_model: done
+[21:15:24] rep= 111  mem=19984.3MB  compute per_rep + ch_*
+[21:15:32] rep= 111  mem=20067.8MB  free big intermediates
+[21:15:33] rep= 111  mem= 666.5MB  summarize_boot_rep
+[21:15:36] rep= 111  mem= 666.5MB  fwrite csv
+[21:15:36] rep= 111  mem= 666.5MB  rep done in 1458.2s
+[21:15:37] rep= 112  mem= 583.0MB  rep start
+[21:15:37] rep= 112  mem= 583.0MB  filter market_data
+[21:15:54] rep= 112  mem=5695.1MB  sample ids
+[21:15:55] rep= 112  mem=5696.7MB  left_join (many-to-many)
+[21:15:58] rep= 112  mem=10808.9MB  estimate_choice_model: start
+[21:47:33] rep= 112  mem=19987.8MB  estimate_choice_model: done
+[21:47:35] rep= 112  mem=19987.8MB  compute per_rep + ch_*
+[21:47:59] rep= 112  mem=20071.2MB  free big intermediates
+[21:48:03] rep= 112  mem= 666.5MB  summarize_boot_rep
+[21:48:17] rep= 112  mem= 666.5MB  fwrite csv
+[21:48:18] rep= 112  mem= 666.5MB  rep done in 1961.7s
+[21:48:19] rep= 113  mem= 583.0MB  rep start
+[21:48:20] rep= 113  mem= 583.0MB  filter market_data
+[21:49:08] rep= 113  mem=5695.1MB  sample ids
+[21:49:10] rep= 113  mem=5696.7MB  left_join (many-to-many)
+[21:49:20] rep= 113  mem=10808.7MB  estimate_choice_model: start
+[22:31:08] rep= 113  mem=19986.1MB  estimate_choice_model: done
+[22:31:10] rep= 113  mem=19986.1MB  compute per_rep + ch_*
+[22:31:38] rep= 113  mem=20069.5MB  free big intermediates
+[22:31:41] rep= 113  mem= 666.5MB  summarize_boot_rep
+[22:31:54] rep= 113  mem= 666.5MB  fwrite csv
+[22:31:54] rep= 113  mem= 666.5MB  rep done in 2615.6s
+[22:31:56] rep= 114  mem= 583.0MB  rep start
+[22:31:56] rep= 114  mem= 583.0MB  filter market_data
+[22:32:44] rep= 114  mem=5695.1MB  sample ids
+[22:32:46] rep= 114  mem=5696.7MB  left_join (many-to-many)
+[22:32:58] rep= 114  mem=10808.7MB  estimate_choice_model: start
+[22:50:57] rep= 114  mem=19984.8MB  estimate_choice_model: done
+[22:50:58] rep= 114  mem=19984.8MB  compute per_rep + ch_*
+[22:51:08] rep= 114  mem=20068.3MB  free big intermediates
+[22:51:09] rep= 114  mem= 666.5MB  summarize_boot_rep
+[22:51:13] rep= 114  mem= 666.5MB  fwrite csv
+[22:51:14] rep= 114  mem= 666.5MB  rep done in 1158.7s
+[22:51:14] rep= 115  mem= 583.0MB  rep start
+[22:51:14] rep= 115  mem= 583.0MB  filter market_data
+[22:51:31] rep= 115  mem=5695.1MB  sample ids
+[22:51:32] rep= 115  mem=5696.7MB  left_join (many-to-many)
+[22:51:35] rep= 115  mem=10808.9MB  estimate_choice_model: start
+[23:04:07] rep= 115  mem=19986.1MB  estimate_choice_model: done
+[23:04:08] rep= 115  mem=19986.1MB  compute per_rep + ch_*
+[23:04:17] rep= 115  mem=20069.5MB  free big intermediates
+[23:04:19] rep= 115  mem= 666.5MB  summarize_boot_rep
+[23:04:23] rep= 115  mem= 666.5MB  fwrite csv
+[23:04:23] rep= 115  mem= 666.5MB  rep done in 789.4s
+[23:04:24] rep= 116  mem= 583.0MB  rep start
+[23:04:24] rep= 116  mem= 583.0MB  filter market_data
+[23:04:42] rep= 116  mem=5695.1MB  sample ids
+[23:04:42] rep= 116  mem=5696.7MB  left_join (many-to-many)
+[23:04:47] rep= 116  mem=10808.7MB  estimate_choice_model: start
+[23:17:59] rep= 116  mem=19985.5MB  estimate_choice_model: done
+[23:18:00] rep= 116  mem=19985.5MB  compute per_rep + ch_*
+[23:18:10] rep= 116  mem=20068.9MB  free big intermediates
+[23:18:11] rep= 116  mem= 666.5MB  summarize_boot_rep
+[23:18:16] rep= 116  mem= 666.5MB  fwrite csv
+[23:18:16] rep= 116  mem= 666.5MB  rep done in 832.3s
+[23:18:16] rep= 117  mem= 583.0MB  rep start
+[23:18:16] rep= 117  mem= 583.0MB  filter market_data
+[23:18:35] rep= 117  mem=5695.1MB  sample ids
+[23:18:36] rep= 117  mem=5696.7MB  left_join (many-to-many)
+[23:18:40] rep= 117  mem=10808.8MB  estimate_choice_model: start
+[23:31:48] rep= 117  mem=19986.4MB  estimate_choice_model: done
+[23:31:49] rep= 117  mem=19986.4MB  compute per_rep + ch_*
+[23:31:58] rep= 117  mem=20069.8MB  free big intermediates
+[23:32:00] rep= 117  mem= 666.5MB  summarize_boot_rep
+[23:32:04] rep= 117  mem= 666.5MB  fwrite csv
+[23:32:05] rep= 117  mem= 666.5MB  rep done in 828.5s
+[23:32:05] rep=   0  mem= 583.0MB  === session quota of 20 reps reached, exiting ===
+[23:32:17] rep=   0  mem= 516.8MB  === runner start, market = 9 , reps_per_session = 20 ===
+[23:32:17] rep= 118  mem= 516.8MB  rep start
+[23:32:17] rep= 118  mem= 516.8MB  filter market_data
+[23:32:25] rep= 118  mem=5628.9MB  sample ids
+[23:32:26] rep= 118  mem=5630.5MB  left_join (many-to-many)
+[23:32:30] rep= 118  mem=10743.6MB  estimate_choice_model: start
+[23:46:56] rep= 118  mem=19984.5MB  estimate_choice_model: done
+[23:46:57] rep= 118  mem=19984.5MB  compute per_rep + ch_*
+[23:47:07] rep= 118  mem=20067.9MB  free big intermediates
+[23:47:09] rep= 118  mem= 666.1MB  summarize_boot_rep
+[23:47:13] rep= 118  mem= 666.4MB  fwrite csv
+[23:47:14] rep= 118  mem= 666.4MB  rep done in 896.7s
+[23:47:14] rep= 119  mem= 583.0MB  rep start
+[23:47:14] rep= 119  mem= 583.0MB  filter market_data
+[23:47:30] rep= 119  mem=5695.1MB  sample ids
+[23:47:31] rep= 119  mem=5696.7MB  left_join (many-to-many)
+[23:47:35] rep= 119  mem=10808.6MB  estimate_choice_model: start
+[00:01:13] rep= 119  mem=19985.3MB  estimate_choice_model: done
+[00:01:14] rep= 119  mem=19985.3MB  compute per_rep + ch_*
+[00:01:25] rep= 119  mem=20068.7MB  free big intermediates
+[00:01:26] rep= 119  mem= 666.5MB  summarize_boot_rep
+[00:01:31] rep= 119  mem= 666.5MB  fwrite csv
+[00:01:31] rep= 119  mem= 666.5MB  rep done in 857.3s
+[00:01:32] rep= 120  mem= 583.0MB  rep start
+[00:01:32] rep= 120  mem= 583.0MB  filter market_data
+[00:01:49] rep= 120  mem=5695.1MB  sample ids
+[00:01:50] rep= 120  mem=5696.7MB  left_join (many-to-many)
+[00:01:54] rep= 120  mem=10808.8MB  estimate_choice_model: start
+[00:14:59] rep= 120  mem=19985.8MB  estimate_choice_model: done
+[00:14:59] rep= 120  mem=19985.8MB  compute per_rep + ch_*
+[00:15:09] rep= 120  mem=20069.3MB  free big intermediates
+[00:15:11] rep= 120  mem= 666.5MB  summarize_boot_rep
+[00:15:15] rep= 120  mem= 666.5MB  fwrite csv
+[00:15:15] rep= 120  mem= 666.5MB  rep done in 824.1s
+[00:15:16] rep= 121  mem= 583.0MB  rep start
+[00:15:16] rep= 121  mem= 583.0MB  filter market_data
+[00:15:32] rep= 121  mem=5695.1MB  sample ids
+[00:15:33] rep= 121  mem=5696.7MB  left_join (many-to-many)
+[00:15:38] rep= 121  mem=10808.8MB  estimate_choice_model: start
+[00:28:57] rep= 121  mem=19986.8MB  estimate_choice_model: done
+[00:28:58] rep= 121  mem=19986.8MB  compute per_rep + ch_*
+[00:29:09] rep= 121  mem=20070.2MB  free big intermediates
+[00:29:10] rep= 121  mem= 666.5MB  summarize_boot_rep
+[00:29:14] rep= 121  mem= 666.5MB  fwrite csv
+[00:29:15] rep= 121  mem= 666.5MB  rep done in 839.0s
+[00:29:15] rep= 122  mem= 583.0MB  rep start
+[00:29:15] rep= 122  mem= 583.0MB  filter market_data
+[00:29:33] rep= 122  mem=5695.1MB  sample ids
+[00:29:34] rep= 122  mem=5696.7MB  left_join (many-to-many)
+[00:29:37] rep= 122  mem=10808.7MB  estimate_choice_model: start
+[00:43:28] rep= 122  mem=19985.9MB  estimate_choice_model: done
+[00:43:28] rep= 122  mem=19985.9MB  compute per_rep + ch_*
+[00:43:38] rep= 122  mem=20069.3MB  free big intermediates
+[00:43:40] rep= 122  mem= 666.5MB  summarize_boot_rep
+[00:43:45] rep= 122  mem= 666.5MB  fwrite csv
+[00:43:45] rep= 122  mem= 666.5MB  rep done in 869.9s
+[00:43:45] rep= 123  mem= 583.0MB  rep start
+[00:43:45] rep= 123  mem= 583.0MB  filter market_data
+[00:44:02] rep= 123  mem=5695.1MB  sample ids
+[00:44:03] rep= 123  mem=5696.7MB  left_join (many-to-many)
+[00:44:07] rep= 123  mem=10808.8MB  estimate_choice_model: start
+[00:58:43] rep= 123  mem=19985.7MB  estimate_choice_model: done
+[00:58:43] rep= 123  mem=19985.7MB  compute per_rep + ch_*
+[00:58:54] rep= 123  mem=20069.1MB  free big intermediates
+[00:58:56] rep= 123  mem= 666.5MB  summarize_boot_rep
+[00:59:00] rep= 123  mem= 666.5MB  fwrite csv
+[00:59:00] rep= 123  mem= 666.5MB  rep done in 915.4s
+[00:59:01] rep= 124  mem= 583.0MB  rep start
+[00:59:01] rep= 124  mem= 583.0MB  filter market_data
+[00:59:18] rep= 124  mem=5695.1MB  sample ids
+[00:59:18] rep= 124  mem=5696.7MB  left_join (many-to-many)
+[00:59:23] rep= 124  mem=10808.6MB  estimate_choice_model: start
+[01:12:47] rep= 124  mem=19984.2MB  estimate_choice_model: done
+[01:12:48] rep= 124  mem=19984.2MB  compute per_rep + ch_*
+[01:12:58] rep= 124  mem=20067.6MB  free big intermediates
+[01:13:00] rep= 124  mem= 666.5MB  summarize_boot_rep
+[01:13:04] rep= 124  mem= 666.5MB  fwrite csv
+[01:13:05] rep= 124  mem= 666.5MB  rep done in 844.0s
+[01:13:05] rep= 125  mem= 583.0MB  rep start
+[01:13:05] rep= 125  mem= 583.0MB  filter market_data
+[01:13:23] rep= 125  mem=5695.1MB  sample ids
+[01:13:23] rep= 125  mem=5696.7MB  left_join (many-to-many)
+[01:13:27] rep= 125  mem=10808.6MB  estimate_choice_model: start
+[01:27:02] rep= 125  mem=19984.9MB  estimate_choice_model: done
+[01:27:02] rep= 125  mem=19984.9MB  compute per_rep + ch_*
+[01:27:13] rep= 125  mem=20068.4MB  free big intermediates
+[01:27:14] rep= 125  mem= 666.5MB  summarize_boot_rep
+[01:27:19] rep= 125  mem= 666.5MB  fwrite csv
+[01:27:20] rep= 125  mem= 666.5MB  rep done in 854.8s
+[01:27:20] rep= 126  mem= 583.0MB  rep start
+[01:27:20] rep= 126  mem= 583.0MB  filter market_data
+[01:27:38] rep= 126  mem=5695.1MB  sample ids
+[01:27:39] rep= 126  mem=5696.7MB  left_join (many-to-many)
+[01:27:43] rep= 126  mem=10808.7MB  estimate_choice_model: start
+[01:40:53] rep= 126  mem=19986.1MB  estimate_choice_model: done
+[01:40:54] rep= 126  mem=19986.1MB  compute per_rep + ch_*
+[01:41:04] rep= 126  mem=20069.5MB  free big intermediates
+[01:41:06] rep= 126  mem= 666.5MB  summarize_boot_rep
+[01:41:10] rep= 126  mem= 666.5MB  fwrite csv
+[01:41:10] rep= 126  mem= 666.5MB  rep done in 830.3s
+[01:41:11] rep= 127  mem= 583.0MB  rep start
+[01:41:11] rep= 127  mem= 583.0MB  filter market_data
+[01:41:28] rep= 127  mem=5695.1MB  sample ids
+[01:41:28] rep= 127  mem=5696.7MB  left_join (many-to-many)
+[01:41:33] rep= 127  mem=10808.5MB  estimate_choice_model: start
+[01:55:01] rep= 127  mem=19984.7MB  estimate_choice_model: done
+[01:55:01] rep= 127  mem=19984.7MB  compute per_rep + ch_*
+[01:55:12] rep= 127  mem=20068.1MB  free big intermediates
+[01:55:13] rep= 127  mem= 666.5MB  summarize_boot_rep
+[01:55:17] rep= 127  mem= 666.5MB  fwrite csv
+[01:55:18] rep= 127  mem= 666.5MB  rep done in 847.1s
+[01:55:18] rep= 128  mem= 583.0MB  rep start
+[01:55:18] rep= 128  mem= 583.0MB  filter market_data
+[01:55:36] rep= 128  mem=5695.1MB  sample ids
+[01:55:36] rep= 128  mem=5696.7MB  left_join (many-to-many)
+[01:55:41] rep= 128  mem=10808.6MB  estimate_choice_model: start
+[02:09:09] rep= 128  mem=19984.4MB  estimate_choice_model: done
+[02:09:10] rep= 128  mem=19984.4MB  compute per_rep + ch_*
+[02:09:20] rep= 128  mem=20067.8MB  free big intermediates
+[02:09:22] rep= 128  mem= 666.5MB  summarize_boot_rep
+[02:09:26] rep= 128  mem= 666.5MB  fwrite csv
+[02:09:27] rep= 128  mem= 666.5MB  rep done in 848.8s
+[02:09:27] rep= 129  mem= 583.0MB  rep start
+[02:09:27] rep= 129  mem= 583.0MB  filter market_data
+[02:09:45] rep= 129  mem=5695.1MB  sample ids
+[02:09:46] rep= 129  mem=5696.7MB  left_join (many-to-many)
+[02:09:50] rep= 129  mem=10808.8MB  estimate_choice_model: start
+[02:23:12] rep= 129  mem=19985.5MB  estimate_choice_model: done
+[02:23:13] rep= 129  mem=19985.5MB  compute per_rep + ch_*
+[02:23:22] rep= 129  mem=20068.9MB  free big intermediates
+[02:23:24] rep= 129  mem= 666.5MB  summarize_boot_rep
+[02:23:28] rep= 129  mem= 666.5MB  fwrite csv
+[02:23:29] rep= 129  mem= 666.5MB  rep done in 841.8s
+[02:23:29] rep= 130  mem= 583.0MB  rep start
+[02:23:29] rep= 130  mem= 583.0MB  filter market_data
+[02:23:47] rep= 130  mem=5695.1MB  sample ids
+[02:23:48] rep= 130  mem=5696.7MB  left_join (many-to-many)
+[02:23:51] rep= 130  mem=10808.9MB  estimate_choice_model: start
+[02:37:08] rep= 130  mem=19985.6MB  estimate_choice_model: done
+[02:37:09] rep= 130  mem=19985.6MB  compute per_rep + ch_*
+[02:37:20] rep= 130  mem=20069.0MB  free big intermediates
+[02:37:22] rep= 130  mem= 666.5MB  summarize_boot_rep
+[02:37:27] rep= 130  mem= 666.5MB  fwrite csv
+[02:37:27] rep= 130  mem= 666.5MB  rep done in 838.0s
+[02:37:27] rep= 131  mem= 583.0MB  rep start
+[02:37:28] rep= 131  mem= 583.0MB  filter market_data
+[02:37:45] rep= 131  mem=5695.1MB  sample ids
+[02:37:46] rep= 131  mem=5696.7MB  left_join (many-to-many)
+[02:37:50] rep= 131  mem=10808.6MB  estimate_choice_model: start
+[02:50:38] rep= 131  mem=19985.8MB  estimate_choice_model: done
+[02:50:38] rep= 131  mem=19985.8MB  compute per_rep + ch_*
+[02:50:48] rep= 131  mem=20069.2MB  free big intermediates
+[02:50:50] rep= 131  mem= 666.5MB  summarize_boot_rep
+[02:50:55] rep= 131  mem= 666.5MB  fwrite csv
+[02:50:55] rep= 131  mem= 666.5MB  rep done in 807.6s
+[02:50:55] rep= 132  mem= 583.0MB  rep start
+[02:50:55] rep= 132  mem= 583.0MB  filter market_data
+[02:51:13] rep= 132  mem=5695.1MB  sample ids
+[02:51:14] rep= 132  mem=5696.7MB  left_join (many-to-many)
+[02:51:17] rep= 132  mem=10808.7MB  estimate_choice_model: start
+[03:05:07] rep= 132  mem=19985.8MB  estimate_choice_model: done
+[03:05:08] rep= 132  mem=19985.8MB  compute per_rep + ch_*
+[03:05:19] rep= 132  mem=20069.2MB  free big intermediates
+[03:05:20] rep= 132  mem= 666.5MB  summarize_boot_rep
+[03:05:25] rep= 132  mem= 666.5MB  fwrite csv
+[03:05:25] rep= 132  mem= 666.5MB  rep done in 869.9s
+[03:05:25] rep= 133  mem= 583.0MB  rep start
+[03:05:26] rep= 133  mem= 583.0MB  filter market_data
+[03:05:42] rep= 133  mem=5695.1MB  sample ids
+[03:05:43] rep= 133  mem=5696.7MB  left_join (many-to-many)
+[03:05:47] rep= 133  mem=10808.7MB  estimate_choice_model: start
+[03:20:14] rep= 133  mem=19985.6MB  estimate_choice_model: done
+[03:20:14] rep= 133  mem=19985.6MB  compute per_rep + ch_*
+[03:20:25] rep= 133  mem=20069.0MB  free big intermediates
+[03:20:26] rep= 133  mem= 666.5MB  summarize_boot_rep
+[03:20:31] rep= 133  mem= 666.5MB  fwrite csv
+[03:20:31] rep= 133  mem= 666.5MB  rep done in 906.1s
+[03:20:32] rep= 134  mem= 583.0MB  rep start
+[03:20:32] rep= 134  mem= 583.0MB  filter market_data
+[03:20:50] rep= 134  mem=5695.1MB  sample ids
+[03:20:51] rep= 134  mem=5696.7MB  left_join (many-to-many)
+[03:20:55] rep= 134  mem=10808.8MB  estimate_choice_model: start
+[03:34:59] rep= 134  mem=19986.2MB  estimate_choice_model: done
+[03:35:00] rep= 134  mem=19986.2MB  compute per_rep + ch_*
+[03:35:10] rep= 134  mem=20069.7MB  free big intermediates
+[03:35:12] rep= 134  mem= 666.5MB  summarize_boot_rep
+[03:35:16] rep= 134  mem= 666.5MB  fwrite csv
+[03:35:16] rep= 134  mem= 666.5MB  rep done in 885.0s
+[03:35:17] rep= 135  mem= 583.0MB  rep start
+[03:35:17] rep= 135  mem= 583.0MB  filter market_data
+[03:35:35] rep= 135  mem=5695.1MB  sample ids
+[03:35:36] rep= 135  mem=5696.7MB  left_join (many-to-many)
+[03:35:41] rep= 135  mem=10808.9MB  estimate_choice_model: start
+[03:48:27] rep= 135  mem=19986.5MB  estimate_choice_model: done
+[03:48:28] rep= 135  mem=19986.5MB  compute per_rep + ch_*
+[03:48:38] rep= 135  mem=20069.9MB  free big intermediates
+[03:48:39] rep= 135  mem= 666.5MB  summarize_boot_rep
+[03:48:44] rep= 135  mem= 666.5MB  fwrite csv
+[03:48:44] rep= 135  mem= 666.5MB  rep done in 807.4s
+[03:48:44] rep= 136  mem= 583.0MB  rep start
+[03:48:45] rep= 136  mem= 583.0MB  filter market_data
+[03:49:02] rep= 136  mem=5695.1MB  sample ids
+[03:49:03] rep= 136  mem=5696.7MB  left_join (many-to-many)
+[03:49:07] rep= 136  mem=10808.6MB  estimate_choice_model: start
+[04:02:08] rep= 136  mem=19985.5MB  estimate_choice_model: done
+[04:02:09] rep= 136  mem=19985.5MB  compute per_rep + ch_*
+[04:02:19] rep= 136  mem=20069.0MB  free big intermediates
+[04:02:20] rep= 136  mem= 666.5MB  summarize_boot_rep
+[04:02:25] rep= 136  mem= 666.5MB  fwrite csv
+[04:02:25] rep= 136  mem= 666.5MB  rep done in 820.9s
+[04:02:26] rep= 137  mem= 583.0MB  rep start
+[04:02:26] rep= 137  mem= 583.0MB  filter market_data
+[04:02:44] rep= 137  mem=5695.1MB  sample ids
+[04:02:44] rep= 137  mem=5696.7MB  left_join (many-to-many)
+[04:02:48] rep= 137  mem=10808.7MB  estimate_choice_model: start
+[04:15:31] rep= 137  mem=19984.9MB  estimate_choice_model: done
+[04:15:31] rep= 137  mem=19984.9MB  compute per_rep + ch_*
+[04:15:41] rep= 137  mem=20068.3MB  free big intermediates
+[04:15:43] rep= 137  mem= 666.5MB  summarize_boot_rep
+[04:15:48] rep= 137  mem= 666.5MB  fwrite csv
+[04:15:48] rep= 137  mem= 666.5MB  rep done in 802.5s
+[04:15:48] rep=   0  mem= 583.0MB  === session quota of 20 reps reached, exiting ===
+[04:16:01] rep=   0  mem= 516.8MB  === runner start, market = 9 , reps_per_session = 20 ===
+[04:16:01] rep= 138  mem= 516.8MB  rep start
+[04:16:01] rep= 138  mem= 516.8MB  filter market_data
+[04:16:09] rep= 138  mem=5628.9MB  sample ids
+[04:16:10] rep= 138  mem=5630.5MB  left_join (many-to-many)
+[04:16:14] rep= 138  mem=10743.7MB  estimate_choice_model: start
+[04:29:39] rep= 138  mem=19985.4MB  estimate_choice_model: done
+[04:29:40] rep= 138  mem=19985.4MB  compute per_rep + ch_*
+[04:29:51] rep= 138  mem=20068.8MB  free big intermediates
+[04:29:53] rep= 138  mem= 666.1MB  summarize_boot_rep
+[04:29:57] rep= 138  mem= 666.4MB  fwrite csv
+[04:29:58] rep= 138  mem= 666.4MB  rep done in 837.2s
+[04:29:58] rep= 139  mem= 583.0MB  rep start
+[04:29:58] rep= 139  mem= 583.0MB  filter market_data
+[04:30:15] rep= 139  mem=5695.1MB  sample ids
+[04:30:15] rep= 139  mem=5696.7MB  left_join (many-to-many)
+[04:30:19] rep= 139  mem=10808.6MB  estimate_choice_model: start
+[04:42:52] rep= 139  mem=19984.5MB  estimate_choice_model: done
+[04:42:53] rep= 139  mem=19984.5MB  compute per_rep + ch_*
+[04:43:03] rep= 139  mem=20067.9MB  free big intermediates
+[04:43:05] rep= 139  mem= 666.5MB  summarize_boot_rep
+[04:43:09] rep= 139  mem= 666.5MB  fwrite csv
+[04:43:09] rep= 139  mem= 666.5MB  rep done in 791.3s
+[04:43:10] rep= 140  mem= 583.0MB  rep start
+[04:43:10] rep= 140  mem= 583.0MB  filter market_data
+[04:43:26] rep= 140  mem=5695.1MB  sample ids
+[04:43:26] rep= 140  mem=5696.7MB  left_join (many-to-many)
+[04:43:30] rep= 140  mem=10808.7MB  estimate_choice_model: start
+[04:56:14] rep= 140  mem=19985.1MB  estimate_choice_model: done
+[04:56:15] rep= 140  mem=19985.1MB  compute per_rep + ch_*
+[04:56:25] rep= 140  mem=20068.5MB  free big intermediates
+[04:56:26] rep= 140  mem= 666.5MB  summarize_boot_rep
+[04:56:31] rep= 140  mem= 666.5MB  fwrite csv
+[04:56:31] rep= 140  mem= 666.5MB  rep done in 801.7s
+[04:56:32] rep= 141  mem= 583.0MB  rep start
+[04:56:32] rep= 141  mem= 583.0MB  filter market_data
+[04:56:49] rep= 141  mem=5695.1MB  sample ids
+[04:56:50] rep= 141  mem=5696.7MB  left_join (many-to-many)
+[04:56:54] rep= 141  mem=10808.8MB  estimate_choice_model: start
+[05:10:14] rep= 141  mem=19985.5MB  estimate_choice_model: done
+[05:10:15] rep= 141  mem=19985.5MB  compute per_rep + ch_*
+[05:10:25] rep= 141  mem=20068.9MB  free big intermediates
+[05:10:26] rep= 141  mem= 666.5MB  summarize_boot_rep
+[05:10:31] rep= 141  mem= 666.5MB  fwrite csv
+[05:10:31] rep= 141  mem= 666.5MB  rep done in 839.6s
+[05:10:31] rep= 142  mem= 583.0MB  rep start
+[05:10:32] rep= 142  mem= 583.0MB  filter market_data
+[05:10:48] rep= 142  mem=5695.1MB  sample ids
+[05:10:49] rep= 142  mem=5696.7MB  left_join (many-to-many)
+[05:10:53] rep= 142  mem=10808.7MB  estimate_choice_model: start
+[05:23:55] rep= 142  mem=19985.7MB  estimate_choice_model: done
+[05:23:56] rep= 142  mem=19985.7MB  compute per_rep + ch_*
+[05:24:06] rep= 142  mem=20069.1MB  free big intermediates
+[05:24:08] rep= 142  mem= 666.5MB  summarize_boot_rep
+[05:24:12] rep= 142  mem= 666.5MB  fwrite csv
+[05:24:12] rep= 142  mem= 666.5MB  rep done in 821.4s
+[05:24:13] rep= 143  mem= 583.0MB  rep start
+[05:24:13] rep= 143  mem= 583.0MB  filter market_data
+[05:24:30] rep= 143  mem=5695.1MB  sample ids
+[05:24:31] rep= 143  mem=5696.7MB  left_join (many-to-many)
+[05:24:35] rep= 143  mem=10808.8MB  estimate_choice_model: start
+[05:37:16] rep= 143  mem=19986.0MB  estimate_choice_model: done
+[05:37:17] rep= 143  mem=19986.0MB  compute per_rep + ch_*
+[05:37:27] rep= 143  mem=20069.4MB  free big intermediates
+[05:37:28] rep= 143  mem= 666.5MB  summarize_boot_rep
+[05:37:33] rep= 143  mem= 666.5MB  fwrite csv
+[05:37:33] rep= 143  mem= 666.5MB  rep done in 800.4s
+[05:37:34] rep= 144  mem= 583.0MB  rep start
+[05:37:34] rep= 144  mem= 583.0MB  filter market_data
+[05:37:50] rep= 144  mem=5695.1MB  sample ids
+[05:37:50] rep= 144  mem=5696.7MB  left_join (many-to-many)
+[05:37:55] rep= 144  mem=10808.7MB  estimate_choice_model: start
+[05:51:39] rep= 144  mem=19984.9MB  estimate_choice_model: done
+[05:51:40] rep= 144  mem=19984.9MB  compute per_rep + ch_*
+[05:51:51] rep= 144  mem=20068.3MB  free big intermediates
+[05:51:53] rep= 144  mem= 666.5MB  summarize_boot_rep
+[05:51:57] rep= 144  mem= 666.5MB  fwrite csv
+[05:51:57] rep= 144  mem= 666.5MB  rep done in 864.0s
+[05:51:58] rep= 145  mem= 583.0MB  rep start
+[05:51:58] rep= 145  mem= 583.0MB  filter market_data
+[05:52:15] rep= 145  mem=5695.1MB  sample ids
+[05:52:16] rep= 145  mem=5696.7MB  left_join (many-to-many)
+[05:52:20] rep= 145  mem=10808.7MB  estimate_choice_model: start
+[06:05:09] rep= 145  mem=19985.2MB  estimate_choice_model: done
+[06:05:09] rep= 145  mem=19985.2MB  compute per_rep + ch_*
+[06:05:19] rep= 145  mem=20068.7MB  free big intermediates
+[06:05:21] rep= 145  mem= 666.5MB  summarize_boot_rep
+[06:05:25] rep= 145  mem= 666.5MB  fwrite csv
+[06:05:25] rep= 145  mem= 666.5MB  rep done in 807.7s
+[06:05:26] rep= 146  mem= 583.0MB  rep start
+[06:05:26] rep= 146  mem= 583.0MB  filter market_data
+[06:05:42] rep= 146  mem=5695.1MB  sample ids
+[06:05:43] rep= 146  mem=5696.7MB  left_join (many-to-many)
+[06:05:47] rep= 146  mem=10809.0MB  estimate_choice_model: start
+[06:18:10] rep= 146  mem=19986.8MB  estimate_choice_model: done
+[06:18:11] rep= 146  mem=19986.8MB  compute per_rep + ch_*
+[06:18:21] rep= 146  mem=20070.3MB  free big intermediates
+[06:18:22] rep= 146  mem= 666.5MB  summarize_boot_rep
+[06:18:27] rep= 146  mem= 666.5MB  fwrite csv
+[06:18:27] rep= 146  mem= 666.5MB  rep done in 781.5s
+[06:18:27] rep= 147  mem= 583.0MB  rep start
+[06:18:28] rep= 147  mem= 583.0MB  filter market_data
+[06:18:44] rep= 147  mem=5695.1MB  sample ids
+[06:18:45] rep= 147  mem=5696.7MB  left_join (many-to-many)
+[06:18:49] rep= 147  mem=10808.7MB  estimate_choice_model: start
+[06:32:19] rep= 147  mem=19985.9MB  estimate_choice_model: done
+[06:32:20] rep= 147  mem=19985.9MB  compute per_rep + ch_*
+[06:32:30] rep= 147  mem=20069.4MB  free big intermediates
+[06:32:32] rep= 147  mem= 666.5MB  summarize_boot_rep
+[06:32:38] rep= 147  mem= 666.5MB  fwrite csv
+[06:32:38] rep= 147  mem= 666.5MB  rep done in 850.8s
+[06:32:39] rep= 148  mem= 583.0MB  rep start
+[06:32:39] rep= 148  mem= 583.0MB  filter market_data
+[06:32:55] rep= 148  mem=5695.1MB  sample ids
+[06:32:56] rep= 148  mem=5696.7MB  left_join (many-to-many)
+[06:32:59] rep= 148  mem=10808.8MB  estimate_choice_model: start
+[06:45:38] rep= 148  mem=19985.4MB  estimate_choice_model: done
+[06:45:38] rep= 148  mem=19985.4MB  compute per_rep + ch_*
+[06:45:48] rep= 148  mem=20068.8MB  free big intermediates
+[06:45:49] rep= 148  mem= 666.5MB  summarize_boot_rep
+[06:45:54] rep= 148  mem= 666.5MB  fwrite csv
+[06:45:54] rep= 148  mem= 666.5MB  rep done in 795.5s
+[06:45:54] rep= 149  mem= 583.0MB  rep start
+[06:45:54] rep= 149  mem= 583.0MB  filter market_data
+[06:46:11] rep= 149  mem=5695.1MB  sample ids
+[06:46:12] rep= 149  mem=5696.7MB  left_join (many-to-many)
+[06:46:16] rep= 149  mem=10808.9MB  estimate_choice_model: start
+[06:59:05] rep= 149  mem=19985.6MB  estimate_choice_model: done
+[06:59:06] rep= 149  mem=19985.6MB  compute per_rep + ch_*
+[06:59:14] rep= 149  mem=20069.0MB  free big intermediates
+[06:59:15] rep= 149  mem= 666.5MB  summarize_boot_rep
+[06:59:18] rep= 149  mem= 666.5MB  fwrite csv
+[06:59:18] rep= 149  mem= 666.5MB  rep done in 804.4s
+[06:59:19] rep= 150  mem= 583.0MB  rep start
+[06:59:19] rep= 150  mem= 583.0MB  filter market_data
+[06:59:36] rep= 150  mem=5695.1MB  sample ids
+[06:59:38] rep= 150  mem=5696.7MB  left_join (many-to-many)
+[06:59:44] rep= 150  mem=10808.8MB  estimate_choice_model: start
+[07:16:11] rep= 150  mem=19985.6MB  estimate_choice_model: done
+[07:16:12] rep= 150  mem=19985.6MB  compute per_rep + ch_*
+[07:16:19] rep= 150  mem=20069.0MB  free big intermediates
+[07:16:20] rep= 150  mem= 666.5MB  summarize_boot_rep
+[07:16:23] rep= 150  mem= 666.5MB  fwrite csv
+[07:16:24] rep= 150  mem= 666.5MB  rep done in 1025.0s

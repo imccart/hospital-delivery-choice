@@ -241,6 +241,18 @@ ylim_dist_age    <- shared_ylim(oth_dist_age, oth_dist_age_mkt, atl_dist_age)
 oth_cs_oci     <- slice_pfx(oth$qntl,     "ch_csection", "ci_scorent")
 oth_cs_oci_mkt <- slice_pfx(oth$qntl_mkt, "ch_csection", "ci_scorent")
 atl_cs_oci     <- slice_pfx(atl$qntl,     "ch_csection", "ci_scorent")
+
+# Figure-only fill for visual continuity at bin 25 (q10 == q25 in every market
+# for OCI; saved pfx_qntl.csv table values are unchanged).
+fill_oci_bin25 <- function(df) {
+  if (!25 %in% df$bin && 10 %in% df$bin) {
+    df <- bind_rows(df, df %>% filter(bin == 10) %>% mutate(bin = 25))
+  }
+  df
+}
+oth_cs_oci <- fill_oci_bin25(oth_cs_oci)
+atl_cs_oci <- fill_oci_bin25(atl_cs_oci)
+
 ylim_cs_oci    <- shared_ylim(oth_cs_oci, oth_cs_oci_mkt, atl_cs_oci)
 
 # Figure 5: c-section x age (Atlanta). Pair y-axis with outside supplemental counterpart.
