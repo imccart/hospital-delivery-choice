@@ -1,0 +1,6 @@
+stage,description,n_deliveries,n_individuals,vs_published_individuals
+1,All linked delivery records,784865,627148,49302
+2,Market assigned,762238,609125,31279
+3,Market-year has a retained hospital,757906,606034,28188
+4,Chosen hospital retained (any_choice==1),713591,574695,-3151
+5,Excluding LaGrange (choice-model sample),710014,571759,-6087

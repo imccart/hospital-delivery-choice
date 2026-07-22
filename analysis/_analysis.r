@@ -151,3 +151,9 @@ write.csv(coefficient.table, paste0("results/tables/",mkt.path,"/coefficients.cs
 write.csv(pfx.data, paste0("results/tables/",mkt.path,"/partial_effects.csv"), row.names=FALSE)
 print(summary_table, target = paste0("results/tables/pfx_means_",mkt.path,".docx"))
 
+
+# Revision analyses (Medical Care R&R) ---------------------------------
+## One chunk per editor/reviewer comment that needs computation. Runs for the
+## active mkt.path config.
+source("analysis/R1_revision.R")
+

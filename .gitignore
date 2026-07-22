@@ -7,3 +7,4 @@ _emails/
 .positai
 .Rhistory
 results/tables/*/boot_reps/debug.log
+agent_history.md

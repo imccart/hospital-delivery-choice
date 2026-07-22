@@ -85,13 +85,15 @@ ggplot(data = tract.dat) +
 
 # Form markets ------------------------------------------------------------
 
-## Run 1_community_detection.R first if hospital_markets.rds doesn't exist;
-## it produces walktrap cluster IDs whose numeric labels are non-deterministic
-## across runs. After regenerating, every downstream pipeline (this file,
-## 3_choice_data.R, _analysis.R, run_boot_summary.R, 4_hsr_figures.r) needs
-## to be re-run so all `mkt` references stay consistent.
-source("data-code/1_community_detection.R")
-walktrap.dat <- read_rds("data/output/hospital_markets.rds")
+## Market definitions are saved inputs. The suffix gives the settings that
+## produced them: 005_steps10 is the 0.05 strong-link threshold with 10
+## random-walk steps, which is the definition behind every result in the paper.
+## To build against another, run 1_community_detection.R at those settings and
+## edit the filename here. Cluster labels differ between definitions, so
+## switching also means updating the hardcoded `mkt` vectors in the analysis
+## scripts. See ReadMe.md.
+walktrap.dat <- read_csv("data/output/market-defs/market_assignment_005_steps10.csv", show_col_types=FALSE)
+
 
 # Final delivery data ------------------------------------------------------
 
@@ -99,9 +101,11 @@ delivery.dat <- full.dat %>% ungroup() %>%
   left_join(walktrap.dat %>% select(GEOID, mkt), by=c("censustract_d"="GEOID")) %>%
   mutate(year=format(date_delivery, "%Y"))
 
-write_rds(delivery.dat,"data/output/delivery_data.rds")  
+write_rds(delivery.dat,"data/output/delivery_data.rds")
+
 
 # Choice data --------------------------------------------------------------
 
-# source("data-code/3_choice_data.R")
-  
+## Builds choice_data_mkt.rds (~2 GB) and choice_data_dist.rds (~4 GB). Slow, so
+## it is usually run on its own after a rebuild rather than as part of the driver.
+## source("data-code/3_choice_data.R")

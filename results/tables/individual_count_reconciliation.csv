@@ -1,0 +1,5 @@
+definition,n_individuals,published,difference
+All linked delivery records,627148,577846,49302
+Market assigned (includes LaGrange),609125,577846,31279
+"Market assigned, excluding LaGrange",605001,577846,27155
+Analytic sample (choice data),573338,577846,-4508

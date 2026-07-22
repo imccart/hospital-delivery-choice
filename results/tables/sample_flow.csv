@@ -1,0 +1,11 @@
+step,label,n
+1,"Linked delivery records, 2016-2020",784865
+2,Excluded: no market assigned (unmapped tract),22627
+2.1,"   of which missing geocode, coded (0,0)",22161
+2.2,   of which tract present but market unassigned,466
+3,"Excluded: LaGrange market, single-hospital choice set",5593
+4,Delivery facilities before hospital-side exclusions,109
+4.1,Delivery facilities retained,90
+5,Analytic sample: deliveries,710870
+5.1,Analytic sample: individuals,573338
+5.2,Analytic sample: hospitals,84

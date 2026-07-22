@@ -34,27 +34,35 @@ results/
 
 ## Pipeline order
 
-1. `data-code/_BuildData.r` -- builds `delivery_data.rds` (sources `1_community_detection.R` to define markets via walktrap, joins covariates).
+1. `data-code/_BuildData.r` -- builds `delivery_data.rds` (reads the market definition file named in the "Form markets" section, joins covariates). `1_community_detection.R` is run separately, only when defining markets at a new threshold.
 2. `data-code/3_choice_data.R` -- builds `choice_data_mkt.rds` (per-patient choice sets within market).
 3. `analysis/_analysis.r` -- runs descriptives and per-market mclogit estimation.
 4. `analysis/run_boot_loop.sh` -- runs the resumable bootstrap. Edit `mkt.path` in `run_boot_chunked.R` to switch between Atlanta-only and outside-Atlanta. Run separately per configuration.
 5. `analysis/run_boot_summary.R` -- assembles bootstrap reps from disk into `final.boot`, sources `3_results_summary.r`, writes per-config `partial_effects.csv` and `pfx_means_<mkt.path>.docx`.
 6. `analysis/4_hsr_figures.r` -- writes Figure 1 (market map) and Figures 2--7 (marginal effects panels) as PDFs.
 
-## Walktrap markets and regeneration
+## Market definitions
 
-Markets are defined empirically by walktrap community detection on patient-flow networks (`data-code/1_community_detection.R`). Each tract's `mkt` value is a numeric cluster label assigned by the algorithm; the labels are arbitrary and **non-deterministic across runs** (re-running walktrap can produce a different numbering). The mapping from `mkt` to a city name (e.g., `mkt == 9` -> "Sandy Springs"/Atlanta) is recovered after the fact in `1_descriptive_stats.r` and stored in `results/tables/market_detail.csv`.
+Markets are defined empirically by walktrap community detection on patient-flow networks (`data-code/1_community_detection.R`), where a tract-hospital pair counts as a "strong" link at or above `minimum_share` of a hospital's deliveries.
 
-The choice model is estimated per market. Several scripts hardcode specific `mkt` values matching the current `delivery_data.rds`:
+A market definition is a saved input, not something the build regenerates. Each one is a `data/output/market-defs/market_assignment_<threshold>_steps<n>.csv` file holding `GEOID` and `mkt`, and `_BuildData.r` reads one of them, named directly in its "Form markets" section.
+
+**Every result in the paper uses `market_assignment_005_steps10.csv`** -- a 0.05 strong-link threshold with 10 random-walk steps, giving 1,959 tracts across 12 markets. Note that this differs from the settings currently in `1_community_detection.R` (0.10 and 20 steps), which were changed on 2024-11-19 after the build that produced the analysis data. Running the script at its current settings yields 16 markets, and that output is kept as `data/output/hospital_markets_2024-11-19_divergent.rds`; nothing reads it. The 0.05/10-step settings reproduce the archived partition exactly, tract for tract and label for label, so the procedure is fully deterministic.
+
+To build against different settings, set `minimum_share` and `walk_steps` in `1_community_detection.R` and run that script directly. It writes a new `market_assignment_<threshold>_steps<n>.csv` plus a matching `results/figures/market_map_<threshold>_steps<n>.png`, leaving existing definitions in place. It needs `full.dat`, `market.dat` and `tract.dat`, so run `_BuildData.r` down to the "Check census tract data" section first.
+
+Cluster labels are arbitrary and differ between runs, so a new definition renumbers every market. The mapping from `mkt` to a city name (e.g., `mkt == 9` -> "Sandy Springs"/Atlanta) is recovered after the fact in `1_descriptive_stats.r` and stored in `results/tables/market_detail.csv`.
+
+Several scripts hardcode `mkt` values matching the current definition:
 
 - `analysis/_analysis.r`: `markets <- c(9)` (Atlanta-only) and `markets <- c(2,3,4,5,6,7,8,10,11)` (outside-Atlanta).
 - `analysis/run_boot_chunked.R`: same vectors.
 - `analysis/run_boot_summary.R`: same vectors.
 - `analysis/3_results_summary.r`: `target_bin_label` (the median age bin string) depends on the markets included.
 
-If `1_community_detection.R` is re-run, the new walktrap may produce different cluster IDs. Procedure to recover:
+After editing that filename to a different definition:
 
-1. Rebuild data: run `_BuildData.r` (which now sources `1_community_detection.R`), then `3_choice_data.R`.
+1. Run `_BuildData.r`, then `3_choice_data.R`.
 2. Open the regenerated `results/tables/market_detail.csv`. The row with `city == "Sandy Springs"` is the new Atlanta `mkt`; the row with `n_facilities == 1` is LaGrange (excluded from the choice model). Update the hardcoded `markets` vectors in the four analysis scripts above.
 3. Rerun the analysis: bootstraps, `run_boot_summary.R` per configuration, `4_hsr_figures.r`.
 

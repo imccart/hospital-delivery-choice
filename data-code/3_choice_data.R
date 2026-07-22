@@ -8,8 +8,8 @@ admits <- delivery.dat %>%
 hospitals <- delivery.dat %>% 
     filter(!is.na(mkt), !is.na(facility_d)) %>% 
     group_by(facility_d, mkt, year) %>%
-    summarize(latitude_f=first(facility_latitude, na.rm=TRUE),
-              longitude_f=first(facility_longitude, na.rm=TRUE),
+    summarize(latitude_f=first(facility_latitude),
+              longitude_f=first(facility_longitude),
               delivery_count=n()) %>%
     group_by(facility_d, year) %>%
     mutate(mkt_count=max(delivery_count)) %>%
