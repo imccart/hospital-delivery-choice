@@ -153,7 +153,6 @@ print(summary_table, target = paste0("results/tables/pfx_means_",mkt.path,".docx
 
 
 # Revision analyses (Medical Care R&R) ---------------------------------
-## One chunk per editor/reviewer comment that needs computation. Runs for the
-## active mkt.path config.
-source("analysis/R1_revision.R")
+## The R&R sensitivities run once across all markets, not per config, so they
+## live in their own track. Run separately: analysis/revision/_revision.R
 
