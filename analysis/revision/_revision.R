@@ -9,7 +9,7 @@
 ##                   Rscript analysis/revision/_revision.R
 ##               To run a subset, comment out the source() lines below.
 
-## Packages and shared helpers for the estimation steps (3-7).
+## Packages and shared helpers for the estimation steps (3-8).
 data.table::setDTthreads(1)
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, data.table, haven, geosphere, mclogit)
@@ -28,3 +28,4 @@ source("analysis/revision/4_system.R")               # R2.3 system membership
 source("analysis/revision/5_first_birth.R")           # R2.8 first-time vs experienced
 source("analysis/revision/6_transfer.R")             # R1.2 maternal transfer
 source("analysis/revision/7_flow_missingness.R")     # R3.1/R3.2 flow and missingness
+source("analysis/revision/8_precovid.R")             # R3.4(c) pre-pandemic sensitivity
